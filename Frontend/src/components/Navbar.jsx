@@ -125,11 +125,14 @@ const Navbar = () => {
         <div className="md:hidden bg-white  shadow-md">
           <div className="flex justify-between px-8 py-4">
             <div className="py-2" onClick={toggleCart}>
-              <FaShoppingCart className="w-8 h-8 text-black cursor-pointer" />
+              
+              <Link to="/cart" onClick={toggleMobileMenu}>
+                <FaShoppingCart className="w-8 h-8 text-black cursor-pointer" />
+              </Link>
             </div>
             <div className="py-2">
               <Link to="/login" onClick={toggleMobileMenu}>
-                <IoLogInSharp className="w-8 h-8 text-black" />
+                <IoLogInSharp className="w-8 h-8 text-black cursor-pointer" />
               </Link>
             </div>
           </div>

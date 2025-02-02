@@ -67,13 +67,20 @@ export default function HomeDecor() {
   return (
     <div className="bg-white">
       {/* Mobile Filter Dialog */}
-      <Dialog open={mobileFiltersOpen} onClose={setMobileFiltersOpen} className="relative z-40 lg:hidden">
+      <Dialog
+        open={mobileFiltersOpen}
+        onClose={setMobileFiltersOpen}
+        className="relative z-40 lg:hidden"
+      >
         <div className="fixed inset-0 bg-black/30" />
         <div className="fixed inset-0 flex">
           <DialogPanel className="relative ml-auto w-80 max-w-xs flex flex-col bg-white p-4 shadow-xl">
             <div className="flex justify-between items-center border-b pb-3">
               <h2 className="text-lg font-semibold">Filters</h2>
-              <button onClick={() => setMobileFiltersOpen(false)} className="text-gray-500 hover:text-gray-700">
+              <button
+                onClick={() => setMobileFiltersOpen(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
                 <XMarkIcon className="w-6 h-6" />
               </button>
             </div>
@@ -86,8 +93,14 @@ export default function HomeDecor() {
                   </DisclosureButton>
                   <DisclosurePanel className="pl-4 text-gray-600">
                     {section.options.map((option, index) => (
-                      <label key={index} className="flex items-center space-x-2 py-1">
-                        <input type="checkbox" className="rounded border-gray-300 focus:ring-indigo-500" />
+                      <label
+                        key={index}
+                        className="flex items-center space-x-2 py-1"
+                      >
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-300 focus:ring-indigo-500"
+                        />
                         <span>{option}</span>
                       </label>
                     ))}
@@ -114,7 +127,12 @@ export default function HomeDecor() {
                 {sortOptions.map((option) => (
                   <MenuItem key={option.name}>
                     {({ active }) => (
-                      <a href={option.href} className={`block px-4 py-2 text-sm ${active ? "bg-gray-100" : ""}`}>
+                      <a
+                        href={option.href}
+                        className={`block px-4 py-2 text-sm ${
+                          active ? "bg-gray-100" : ""
+                        }`}
+                      >
                         {option.name}
                       </a>
                     )}
@@ -127,7 +145,10 @@ export default function HomeDecor() {
             <button className="text-gray-500 hover:text-gray-700">
               <Squares2X2Icon className="w-6 h-6" />
             </button>
-            <button onClick={() => setMobileFiltersOpen(true)} className="lg:hidden text-gray-500 hover:text-gray-700">
+            <button
+              onClick={() => setMobileFiltersOpen(true)}
+              className="lg:hidden text-gray-500 hover:text-gray-700"
+            >
               <FunnelIcon className="w-6 h-6" />
             </button>
           </div>
@@ -146,8 +167,14 @@ export default function HomeDecor() {
                   </DisclosureButton>
                   <DisclosurePanel className="pl-4 text-gray-600">
                     {section.options.map((option, index) => (
-                      <label key={index} className="flex items-center space-x-2 py-1">
-                        <input type="checkbox" className="rounded border-gray-300 focus:ring-indigo-500" />
+                      <label
+                        key={index}
+                        className="flex items-center space-x-2 py-1"
+                      >
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-300 focus:ring-indigo-500"
+                        />
                         <span>{option}</span>
                       </label>
                     ))}
@@ -157,42 +184,26 @@ export default function HomeDecor() {
             </aside>
 
             {/* Product Grid */}
-           {/* Product Grid */}
-<div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
-  {[imgcart24, imgcart25, imgcart26, imgcart27, imgcart28, imgcart29, imgcart30, imgcart31, imgcart32, imgcart33, imgcart34, imgcart35, imgcart36].map((img, index) => (
-    <div
-      key={index}
-      className="flex flex-col items-center bg-white shadow rounded-lg overflow-hidden border border-gray-200"
-    >
-      {/* Image Section */}
-      <div className="w-full aspect-w-3 aspect-h-4">
-        <img
-          src={img}
-          alt={`Product ${index}`}
-          className="object-cover h-full w-full"
-        />
-      </div>
-
-      {/* Content Section */}
-      <div className="p-4 text-center space-y-2">
-        <h3 className="text-sm font-medium text-gray-800 uppercase">GALLERY 25</h3>
-        <p className="text-xs text-gray-500">Sundarbans</p>
-        <p className="text-lg font-semibold text-gray-900">$499</p>
-      </div>
-
-      {/* Buttons */}
-      <div className="flex space-x-2 w-full p-4">
-        <button className="flex-1 bg-black text-white text-sm font-medium py-2 px-4 rounded hover:bg-gray-800">
-          ADD TO CART
-        </button>
-        <button className="flex-1 bg-black text-white text-sm font-medium py-2 px-4 rounded hover:bg-gray-800">
-          BUY NOW
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
-
+            {/* Product Grid */}
+            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-6 gap-y-8">
+              {[
+                imgcart24,
+                imgcart25,
+                imgcart26,
+                imgcart27,
+                imgcart28,
+                imgcart29,
+                imgcart30,
+                imgcart31,
+                imgcart32,
+                imgcart33,
+                imgcart34,
+                imgcart35,
+                imgcart36,
+              ].map((img, index) => (
+                <Cards imgProd={img} />
+              ))}
+            </div>
           </div>
         </section>
       </main>

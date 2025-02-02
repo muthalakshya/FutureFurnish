@@ -58,7 +58,7 @@ const Carosel = () => {
     };
   
     return (
-      <div className="relative w-full h-[730px] overflow-hidden">
+      <div className="relative w-full h-[730px] ">
         <AnimatePresence>
           {slides.map(
             (slide, index) =>
@@ -105,13 +105,13 @@ const Carosel = () => {
         {/* Arrows */}
         <button
           onClick={handlePrev}
-          className="absolute top-1/2 left-4 -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-md"
+          className="absolute top-1/2 left-8 translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-md"
         >
           &#8249;
         </button>
         <button
           onClick={handleNext}
-          className="absolute top-1/2 right-4 -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-md"
+          className="absolute top-1/2 right-8 translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-md"
         >
           &#8250;
         </button>

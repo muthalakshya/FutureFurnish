@@ -65,7 +65,7 @@ export default function HomeDecor() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white pt-16">
       {/* Mobile Filter Dialog */}
       <Dialog
         open={mobileFiltersOpen}

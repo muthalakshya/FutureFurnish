@@ -4,6 +4,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { IoLogInSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../content/ShopContext";
+import Logo from "../assets/Logo.png";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,7 +26,8 @@ const Navbar = () => {
         <div className="flex items-center">
           <img
             className="w-32"
-            src="https://cdn.ddecor.com/static/version1737628305/frontend/Ddecor/nextgen/en_US/images/logo.svg"
+            src={Logo}
+            // src="https://cdn.ddecor.com/static/version1737628305/frontend/Ddecor/nextgen/en_US/images/logo.svg"
             alt="Logo"
           />
         </div>

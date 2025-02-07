@@ -27,17 +27,28 @@ import ConsultantDashboard from "./pages/ConsultantDashboard"
 import CustomerDashboard from "./pages/CustomerDashboard"
 import Wishlist from "./pages/Wishlist"
 import OrderHistory from "./pages/OrderHistory"
+import imgcart24 from "./assets/imgcart24.jpg";
+import imgcart25 from "./assets/imgcart25.jpg";
+import imgcart26 from "./assets/imgcart26.jpg";
+
+
+const products = [
+  { id: "0", img: imgcart24, name: "Gallery 25 Sundarbans", price: 499 },
+  { id: "1", img: imgcart25, name: "Zip Tote Basket", price: 140 },
+  { id: "2", img: imgcart26, name: "Halfsize Tote", price: 210 },
+  // Add more products...
+];
 
 function App() {
 
   return (
-    <div>
+    <div className='bg-[#f1f9eb]'>
       <ToastContainer />
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
-        <Route path='/home-decor/:productId' element={<ProductDetail />} />
+        <Route path='/home-decor/:productId' element={<ProductDetail products={products}/>} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/login' element={<Login />} />
         <Route path='/consultants' element={<Consultants />} />

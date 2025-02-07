@@ -21,29 +21,29 @@ const ShopContextProvider = (props)=>{
     const toggleCart = () => setCartOpen(!isCartOpen);
 
 
-    // const addToCart = async (itemId, size) => {
-    //     let cartData = structuredClone(cartItems);  // Clone the cartItems
-    //     if (cartData[itemId]) {
-    //         if (cartData[itemId][size]) {
-    //             cartData[itemId][size] += 1;  // Increment quantity if size already exists
-    //         } else {
-    //             cartData[itemId][size] = 1;  // Add new size with quantity 1
-    //         }
-    //     } else {
-    //         cartData[itemId] = {};  // Create a new item entry
-    //         cartData[itemId][size] = 1;  // Set quantity for the selected size
-    //     }
-    //     setCartItems(cartData);  // Update state with new cartData
+    const addToCart = async (itemId, size) => {
+        let cartData = structuredClone(cartItems);  // Clone the cartItems
+        if (cartData[itemId]) {
+            if (cartData[itemId][size]) {
+                cartData[itemId][size] += 1;  // Increment quantity if size already exists
+            } else {
+                cartData[itemId][size] = 1;  // Add new size with quantity 1
+            }
+        } else {
+            cartData[itemId] = {};  // Create a new item entry
+            cartData[itemId][size] = 1;  // Set quantity for the selected size
+        }
+        setCartItems(cartData);  // Update state with new cartData
 
-    //     if(token){
-    //         try {
-    //             await axios.post(backendUrl+'/api/cart/add',{itemId,size}, {headers:{token}})
-    //         } catch (error) {
-    //             console.log(error)
-    //             toast.error(error.message)
-    //         }
-    //     }
-    // };
+        // if(token){
+        //     try {
+        //         await axios.post(backendUrl+'/api/cart/add',{itemId,size}, {headers:{token}})
+        //     } catch (error) {
+        //         console.log(error)
+        //         toast.error(error.message)
+        //     }
+        // }
+    };
 
 
 
@@ -133,7 +133,8 @@ const ShopContextProvider = (props)=>{
         products ,currency, delivery_fee,
         search,setSearch,setShowSearch,showSearch,
         cartItems,
-        //  addToCart, getCartCount, 
+         addToCart, 
+        //getCartCount, 
         //  setCartItems,
         // updateQuantity,
         // getCartAmount, 

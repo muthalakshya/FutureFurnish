@@ -201,7 +201,7 @@ export default function HomeDecor() {
                 imgcart35,
                 imgcart36,
               ].map((img, index) => (
-                <Cards imgProd={img} />
+                <Cards imgProd={img} productId={index} />
               ))}
             </div>
           </div>

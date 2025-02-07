@@ -1,0 +1,101 @@
+.about-page {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  
+  .hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    background: #f9f9f9;
+  }
+  
+  .hero-content {
+    max-width: 50%;
+  }
+  
+  .hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-content p {
+    font-size: 1.2rem;
+    color: #555;
+  }
+  
+  .hero-image img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .story-section {
+    padding: 2rem;
+    background: #fff;
+  }
+  
+  .story-section h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .timeline {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
+  }
+  
+  .timeline-item {
+    text-align: center;
+  }
+  
+  .team-section {
+    padding: 2rem;
+    background: #f9f9f9;
+  }
+  
+  .team-section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .team-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .team-member {
+    text-align: center;
+    max-width: 150px;
+  }
+  
+  .team-member img {
+    width: 100%;
+    border-radius: 50%;
+  }
+  
+  .map-section {
+    padding: 2rem;
+    background: #fff;
+    text-align: center;
+  }
+  
+  .cta-section {
+    padding: 2rem;
+    background: #007bff;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .cta-section button {
+    background: #fff;
+    color: #007bff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

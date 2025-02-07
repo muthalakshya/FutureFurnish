@@ -2,10 +2,13 @@ import React from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { FaMagnifyingGlassPlus } from "react-icons/fa6";
 import { FaShareAlt } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Cards = ({ imgProd }) => {
+const Cards = ({ imgProd, productId }) => {
+  // const { productId } = useParams();
+  const navigate = useNavigate();
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden relative group">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden relative group" onClick={()=>{navigate(`/home-decor/${productId}`)}}>
       {/* Card Image */}
       <img
         src={imgProd}

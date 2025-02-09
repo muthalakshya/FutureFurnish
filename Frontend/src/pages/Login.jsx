@@ -1,43 +1,29 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { ShopContext } from "../content/ShopContext";
 
 const Login = () => {
+  
   const [currentState, setCurrentState] = useState("Login"); // Track current state (Login or Sign Up)
-  const [registrationType, setRegistrationType] = useState(""); // Track the selected registration type
+  const {token, setToken, navigate , backendUrl, setRegistrationType} = useContext(ShopContext)
+  
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [mobileNo, setMobileNo] = useState("");
+  const [name, setName] = useState('')
 
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      if (currentState === "Sign Up") {
-        const registrationData = {
-          name,
-          email,
-          password,
-          mobileNo,
-          type: registrationType, // Include the selected registration type
-        };
+    e.preventDefault()
 
-        const response = await axios.post("/api/user/register", registrationData); // Update with your backend URL
-        if (response.data.success) {
-          toast.success("Account created successfully!");
-          setCurrentState("Login");
-        } else {
-          toast.error(response.data.message);
-        }
-      } else {
-        const loginData = { email, password };
-        const response = await axios.post("/api/user/login", loginData); // Update with your backend URL
-        if (response.data.success) {
-          toast.success("Logged in successfully!");
-          // Handle successful login (e.g., save token, redirect)
-        } else {
-          toast.error(response.data.message);
+    try {
+      if (currentState === "Login") {
+        const response = await axios.post(backendUrl+"/api/user/login",{email,password})
+        if(response.data.success){
+          setToken(response.data.token)
+          localStorage.setItem('token',response.data.token)
+        }else{
+          toast.error(response.data.message)
         }
       }
     } catch (error) {
@@ -46,10 +32,16 @@ const Login = () => {
     }
   };
 
+  useEffect(()=>{
+    if(token){
+      navigate('/customer-dashboard')
+    }
+  },[token])
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-42 lg:px-8">
       {/* Registration Type Selector */}
-      {currentState === "Sign Up" && !registrationType && (
+      {currentState === "Sign Up"  && (
         <div className="flex flex-col items-center gap-4 text-gray-700">
           <h2 className="text-2xl font-bold">Choose Registration Type</h2>
           {/* <div className="sm:flex gap-4">
@@ -97,7 +89,7 @@ const Login = () => {
       )}
 
       {/* Login/Registration Form */}
-      {registrationType || currentState === "Login" ? (
+      { currentState === "Login" ? (
         <form
           onSubmit={onSubmitHandler}
           className="flex flex-col items-center w-[90%] sm:max-w-96 m-auto gap-4 text-gray-700"
@@ -108,7 +100,7 @@ const Login = () => {
           </div>
 
           {/* Name field for Sign Up */}
-          {currentState === "Sign Up" && (
+          {/* {currentState === "Sign Up" && (
             <input
               onChange={(e) => setName(e.target.value)}
               value={name}
@@ -117,17 +109,17 @@ const Login = () => {
               placeholder="Name"
               required
             />
-          )}
+          )} */}
 
           {/* Input fields common to both Login and Sign Up */}
-          <input
+          {/* <input
             onChange={(e) => setMobileNo(e.target.value)}
             value={mobileNo}
             type="number"
             className="w-full px-3 py-2 border border-gray-800"
             placeholder="Mobile No."
             required
-          />
+          /> */}
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}

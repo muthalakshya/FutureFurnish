@@ -9,7 +9,7 @@ const ShopContextProvider = (props)=>{
 
     const currency = '$';
     const delivery_fee = 10;
-    // const backendUrl = import.meta.env.VITE_BACKEND_URL
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(true);
     const [cartItems, setCartItems] = useState({});
@@ -17,6 +17,7 @@ const ShopContextProvider = (props)=>{
     const [token,setToken] = useState('')
     const navigate = useNavigate()
     const [isCartOpen, setCartOpen] = useState(false);
+    const [registrationType, setRegistrationType] = useState("");
 
     const toggleCart = () => setCartOpen(!isCartOpen);
 
@@ -122,12 +123,12 @@ const ShopContextProvider = (props)=>{
     //     getProductData()
     // },[])
 
-    // useEffect (()=>{
-    //     if (!token && localStorage.getItem('token') ) {
-    //         setToken(localStorage.getItem('token'))
-    //         getUserCart(localStorage.getItem('token'))
-    //     }
-    // },[])
+    useEffect (()=>{
+        if (!token && localStorage.getItem('token') ) {
+            setToken(localStorage.getItem('token'))
+            // getUserCart(localStorage.getItem('token'))
+        }
+    },[])
 
     const value = {
         products ,currency, delivery_fee,
@@ -139,9 +140,10 @@ const ShopContextProvider = (props)=>{
         // updateQuantity,
         // getCartAmount, 
         navigate,
-        // backendUrl,
+        backendUrl,
         setToken, token,
-        isCartOpen, toggleCart, setCartOpen 
+        isCartOpen, toggleCart, setCartOpen ,
+        registrationType, setRegistrationType,
     }
     return (
         <ShopContext.Provider value={value}>

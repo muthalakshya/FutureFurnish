@@ -3,7 +3,7 @@ import IndustryForm from './IndustryForm'
 
 const Industry = () => {
   return (
-    <div className='pt-16'>
+    <div className='bg-black'>
       <IndustryForm />
     </div>
   )

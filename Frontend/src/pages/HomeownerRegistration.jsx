@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { ShopContext } from "../content/ShopContext";
 
 const HomeownerRegistration = () => {
+  const {token, setToken, navigate , backendUrl, setRegistrationType} = useContext(ShopContext)
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -11,57 +16,70 @@ const HomeownerRegistration = () => {
     city: "",
     state: "",
     zipCode: "",
-    // propertyType: "",
-    // homeSize: "",
-    // preferredServices: [],
     additionalDetails: "",
   });
-
-//   const [propertyTypes] = useState(["Apartment", "Villa", "Townhouse", "Condo", "Single-Family Home"]);
-//   const [serviceOptions] = useState(["Plumbing", "Electrical", "HVAC", "Landscaping", "Cleaning", "Renovation"]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-//   const handleServiceChange = (e) => {
-//     const { value, checked } = e.target;
-//     const updatedServices = checked
-//       ? [...formData.preferredServices, value]
-//       : formData.preferredServices.filter((service) => service !== value);
-//     setFormData({ ...formData, preferredServices: updatedServices });
-//   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
 
-    const submissionData = { ...formData };
-    console.log("Submitted Data:", submissionData);
-    alert("Registration successful!");
+    const submissionData = {
+      userType: "customer", // Specify user type
+      fullName: formData.fullName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      password: formData.password,
+      address: {
+        streetAddress: formData.address,
+        city: formData.city,
+        state: formData.state,
+        postalCode: formData.zipCode,
+      },
+      additionalDetails: formData.additionalDetails,
+    };
 
-    // Clear form
-    setFormData({
-      fullName: "",
-      email: "",
-      phoneNumber: "",
-      password: "",
-      confirmPassword: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      propertyType: "",
-    //   homeSize: "",
-    //   preferredServices: [],
-    //   additionalDetails: "",
-    });
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/register`, submissionData);
+      
+      if (response.data.success) {
+        setToken(response.data.token)
+        localStorage.setItem("token", response.data.token);
+        toast.success("Registration successful!");
+        setFormData({
+          fullName: "",
+          email: "",
+          phoneNumber: "",
+          password: "",
+          confirmPassword: "",
+          address: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          additionalDetails: "",
+        });
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Something went wrong!");
+    }
   };
+
+  useEffect(()=>{
+    if(token){
+      navigate('/customer-dashboard')
+    }
+  },[token])
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-24">

@@ -11,7 +11,7 @@ const products = [
     price: "$90.00",
     quantity: 1,
     imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
+      "https://cdn.ddecor.com/media/wysiwyg/collection/desktop_1920-pix-x-920-pix_sahara-weaves.jpg",
     imageAlt:
       "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
   },
@@ -23,7 +23,7 @@ const products = [
     price: "$32.00",
     quantity: 1,
     imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
+      "https://cdn.ddecor.com/media/wysiwyg/collection/desktop_1920-pix-x-920-pix_sahara-weaves.jpg",
     imageAlt:
       "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
   },
@@ -134,7 +134,7 @@ export default function Cart() {
 //     color: 'Salmon',
 //     price: '$90.00',
 //     quantity: 1,
-//     imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
+//     imageSrc: 'https://cdn.ddecor.com/media/wysiwyg/collection/desktop_1920-pix-x-920-pix_sahara-weaves.jpg',
 //     imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
 //   },
 //   {

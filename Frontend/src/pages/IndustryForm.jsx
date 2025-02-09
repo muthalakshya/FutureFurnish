@@ -1,14 +1,18 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { ShopContext } from "../content/ShopContext";
 
 const IndustryForm = () => {
-  const navigate = useNavigate();
+  const {token, setToken, navigate , backendUrl, setRegistrationType} = useContext(ShopContext)
+
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     businessName: "",
-    contactNumber: "",
     email: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
     addressLine1: "",
     addressLine2: "",
     city: "",
@@ -26,17 +30,70 @@ const IndustryForm = () => {
   };
 
   // Handle Form Submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Save to local storage
-    navigate("/industry-dashboard")
-    localStorage.setItem("registrationData", JSON.stringify(formData));
-    // alert("Form submitted and data saved to local storage!");
-    console.log("Saved Data:", formData); // Optional for debugging
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    const submissionData = {
+      userType: "industry", // Specify user type
+      fullName: formData.fullName,
+      businessName: formData.businessName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      password: formData.password,
+      businessType: formData.businessType,
+      addressDetails: {
+        streetAddress: formData.address,
+        city: formData.city,
+        state: formData.state,
+        postalCode: formData.zipCode,
+      },
+      message: formData.additionalDetails,
+    };
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/register`, submissionData);
+      
+      if (response.data.success) {
+        setToken(response.data.token)
+        localStorage.setItem("token", response.data.token);
+        toast.success("Registration successful!");
+        setFormData({
+          fullName: "",
+          businessName: "",
+          phoneNumber: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          addressLine1: "",
+          addressLine2: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          businessType: "",
+          others: "",
+          message: "",
+        });
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Something went wrong!");
+    }
+    localStorage.setItem("registrationData", JSON.stringify(submissionData));
   };
 
+  useEffect(()=>{
+    if(token){
+      navigate("/industry-dashboard")
+    }
+  },[token])
+
   return (
-    <div className="min-h-screen flex py-20 items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex py-24 items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl">
         <h1 className="text-2xl font-bold text-center mb-4">
           Register Your Business
@@ -51,27 +108,21 @@ const IndustryForm = () => {
             <label className="block font-semibold mb-2">
               Business Owner <span className="text-red-500">*</span>
             </label>
-            <div className="flex gap-4">
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                placeholder="First Name"
-                className="w-full border border-gray-300 rounded-md p-2"
-                required
-              />
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Last Name"
-                className="w-full border border-gray-300 rounded-md p-2"
-                required
-              />
-            </div>
+
+            <div>
+            {/* <label className="block font-semibold mb-2">Full Name</label> */}
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder="Enter your full name"
+              className="w-full border border-gray-300 rounded-md p-2"
+              required
+            />
           </div>
+          </div>
+          
 
           {/* Business Name */}
           <div>
@@ -91,14 +142,15 @@ const IndustryForm = () => {
 
           {/* Contact Number */}
           <div>
-            <label className="block font-semibold mb-2">Contact Number</label>
+            <label className="block font-semibold mb-2">Phone Number</label>
             <input
               type="tel"
-              name="contactNumber"
-              value={formData.contactNumber}
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={handleChange}
-              placeholder="(000) 000-0000"
+              placeholder="Enter your phone number"
               className="w-full border border-gray-300 rounded-md p-2"
+              required
             />
           </div>
 
@@ -117,7 +169,34 @@ const IndustryForm = () => {
               required
             />
           </div>
-
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block font-semibold mb-2">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                className="w-full border border-gray-300 rounded-md p-2"
+                required
+              />
+            </div>
+            <div>
+              <label className="block font-semibold mb-2">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm your password"
+                className="w-full border border-gray-300 rounded-md p-2"
+                required
+              />
+            </div>
+          </div>
           {/* Address */}
           <div>
             <label className="block font-semibold mb-2">

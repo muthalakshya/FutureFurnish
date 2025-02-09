@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { ShopContext } from "../content/ShopContext";
 
 const ConsultantRegistration = () => {
-  const navigate = useNavigate();
+  const {token, setToken, navigate , backendUrl, setRegistrationType} = useContext(ShopContext)
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -45,38 +48,75 @@ const ConsultantRegistration = () => {
     setFormData({ ...formData, resume: e.target.files[0] });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
 
     const submissionData = {
-      ...formData,
+      userType: "customer", // Specify user type
+      fullName: formData.fullName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      password: formData.password,
+      introduction: formData.introduction,
     };
 
-    // Simulate backend submission
-    console.log("Submitted Data:", submissionData);
-    alert("Registration successful!");
+    // const submissionData = new FormData();
+    // submissionData.append("userType", "consultant");
+    // submissionData.append("fullName", formData.fullName);
+    // submissionData.append("email", formData.email);
+    // submissionData.append("phoneNumber", formData.phoneNumber);
+    // submissionData.append("password", formData.password);
+    // submissionData.append("expertise", JSON.stringify(formData.expertise));
+    // submissionData.append("yearsOfExperience", formData.yearsOfExperience);
+    // submissionData.append("linkedInProfile", formData.linkedInProfile);
+    // submissionData.append("introduction", formData.introduction);
+    if (formData.linkedInProfile) {
+      submissionData["linkedInProfile"]= formData.linkedInProfile;
+    }
+    if (formData.resume) {
+      submissionData["resume"]= formData.resume;
+    }
+    if (formData.yearsOfExperience) {
+      submissionData["yearsOfExperience"]= Number(formData.yearsOfExperience);
+    }
 
-    navigate("/consultant-dashboard")
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/register`, submissionData);
 
-    // Clear form
-    setFormData({
-      fullName: "",
-      email: "",
-      phoneNumber: "",
-      password: "",
-      confirmPassword: "",
-      expertise: [],
-      yearsOfExperience: "",
-      linkedInProfile: "",
-      introduction: "",
-      resume: null,
-    });
+      if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
+        toast.success("Registration successful!");
+        setToken(response.data.token)
+        setFormData({
+          fullName: "",
+          email: "",
+          phoneNumber: "",
+          password: "",
+          confirmPassword: "",
+          expertise: [],
+          yearsOfExperience: "",
+          linkedInProfile: "",
+          introduction: "",
+          resume: null,
+        });
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Something went wrong!");
+    }
   };
+  useEffect(()=>{
+    if(token){
+      navigate("/consultant-dashboard");
+    }
+  },[token])
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-24">

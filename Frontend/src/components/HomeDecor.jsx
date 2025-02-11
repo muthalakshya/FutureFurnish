@@ -35,6 +35,8 @@ import imgcart34 from "../assets/imgcart34.jpg";
 import imgcart35 from "../assets/imgcart35.jpg";
 import imgcart36 from "../assets/imgcart36.jpg";
 
+import {products} from "../assets copy/assets"
+
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
   { name: "Best Rating", href: "#", current: false },
@@ -63,7 +65,7 @@ const filters = [
 
 export default function HomeDecor() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
+  console.log(products[0].image)
   return (
     <div className="bg-[#f1f9eb] pt-16" >
       {/* Mobile Filter Dialog */}
@@ -183,25 +185,10 @@ export default function HomeDecor() {
               ))}
             </aside>
 
-            {/* Product Grid */}
-            {/* Product Grid */}
+
             <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-6 gap-y-8">
-              {[
-                imgcart24,
-                imgcart25,
-                imgcart26,
-                imgcart27,
-                imgcart28,
-                imgcart29,
-                imgcart30,
-                imgcart31,
-                imgcart32,
-                imgcart33,
-                imgcart34,
-                imgcart35,
-                imgcart36,
-              ].map((img, index) => (
-                <Cards imgProd={img} productId={index} />
+              {products.map((img, index) => (
+                <Cards imgProd={products[index].image} productId={index} name={products[index].name} price={products[index].price} description={products[index].description} sizes={products[index].sizes} />
               ))}
             </div>
           </div>

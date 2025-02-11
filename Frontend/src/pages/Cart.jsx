@@ -1,37 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ShopContext } from "../content/ShopContext";
+import { assets } from "../assets copy/assets";
 
-const products = [
-  {
-    id: 1,
-    name: "Throwback Hip Bag",
-    href: "#",
-    color: "Salmon",
-    price: "$90.00",
-    quantity: 1,
-    imageSrc:
-      "https://cdn.ddecor.com/media/wysiwyg/collection/desktop_1920-pix-x-920-pix_sahara-weaves.jpg",
-    imageAlt:
-      "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-  },
-  {
-    id: 2,
-    name: "Medium Stuff Satchel",
-    href: "#",
-    color: "Blue",
-    price: "$32.00",
-    quantity: 1,
-    imageSrc:
-      "https://cdn.ddecor.com/media/wysiwyg/collection/desktop_1920-pix-x-920-pix_sahara-weaves.jpg",
-    imageAlt:
-      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-  },
-  // More products...
-];
+// const products = [
+//   {
+//     id: 1,
+//     name: "Throwback Hip Bag",
+//     href: "#",
+//     color: "Salmon",
+//     price: "$90.00",
+//     quantity: 1,
+//     imageSrc:
+//       "https://cdn.ddecor.com/media/wysiwyg/collection/desktop_1920-pix-x-920-pix_sahara-weaves.jpg",
+//     imageAlt:
+//       "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
+//   },
+//   {
+//     id: 2,
+//     name: "Medium Stuff Satchel",
+//     href: "#",
+//     color: "Blue",
+//     price: "$32.00",
+//     quantity: 1,
+//     imageSrc:
+//       "https://cdn.ddecor.com/media/wysiwyg/collection/desktop_1920-pix-x-920-pix_sahara-weaves.jpg",
+//     imageAlt:
+//       "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
+//   },
+//   // More products...
+// ];
 
 export default function Cart() {
-  const [open, setOpen] = useState(true);
+  
+  const { products, currency, cartItems, updateQuantity, navigate, getCartAmount} = useContext(ShopContext);
+  const [cartData, setCartData] = useState([]);
+  console.log(cartData)
+  useEffect(()=>{
+    if(products.length>0){
+      const tempData = [];
+      for(const items in cartItems){
+        for(const item in cartItems [items]){
+          if (cartItems [items][item] > 0) {
+            tempData.push({
+              _id: items,
+              size:item,
+              quantity:cartItems[items][item]
+            })
+          }
+        }
+      }
+      setCartData(tempData)
+    }
+  },[cartItems,products])
+
+
 
   return (
     <div className="pt-24 px-4 sm:px-10 lg:px-40 w-full justify-center">
@@ -44,7 +68,7 @@ export default function Cart() {
       <div className="mt-8">
         <div className="flow-root">
           <ul role="list" className="divide-y divide-gray-200">
-            {products.map((product) => (
+            {/* {products.map((product) => (
               <li key={product.id} className="flex py-6">
                 <div className="w-24 h-24 sm:w-36 sm:h-36 shrink-0 overflow-hidden rounded-md border border-gray-200">
                   <img
@@ -80,14 +104,35 @@ export default function Cart() {
                   </div>
                 </div>
               </li>
-            ))}
+            ))} */}
+            {
+          cartData.map((item, index)=>{
+            const productData = products.find((product)=> product._id === item._id);
+            return (
+              <div key={index} className='py-4 border-t border-btext-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4'>
+                <div className=' flex items-start gap-6'>
+                  <img className='w-16 sm:w-20' src={productData.image[0]} alt="" />
+                  <div>
+                    <p className='text-xs sm:text-lg font-medium'>{productData.name}</p>
+                    <div className='flex items-center gap-5 mt-2'>
+                      <p>{currency}{productData.price}</p>
+                      <p className='px-2 sm:px-3 sm:py-1 border bg-slate-50'>{item.size}</p>
+                    </div>
+                  </div>
+                </div>
+                <input onChange={(e)=> e.target.value === '' || e.target.value === '0'? null : updateQuantity(item._id,item.size,Number(e.target.value))} className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type='number' min={1}  defaultValue={item.quantity}/>
+                <img onClick={()=>updateQuantity(item._id, item.size,0)} src={assets.bin_icon} className='w-4 mr-4 sm:w-5 cursor-pointer' />
+              </div>
+            )
+          })
+        }
           </ul>
         </div>
       </div>
       <div className="border-t border-gray-200 px-4 mt-6 py-6 sm:px-6">
         <div className="flex justify-between text-sm sm:text-base font-medium text-gray-900">
           <p>Subtotal</p>
-          <p>$262.00</p>
+          <p>{currency} {getCartAmount()}.00</p>
         </div>
         <p className="mt-0.5 text-xs sm:text-sm text-gray-500">
           Shipping and taxes calculated at checkout.

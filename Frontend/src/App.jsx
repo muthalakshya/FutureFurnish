@@ -6,38 +6,33 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import About from './pages/About'
 import Cart from './pages/Cart'
-import Consultants from './pages/Consultants'
+import Consultants from './conultant/Consultants'
 import HomeDecor from './components/HomeDecor'
 import 'react-toastify/dist/ReactToastify.css';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer, toast } from 'react-toastify';
-import Customer from './pages/Customer'
-import Industry from './pages/Industry'
-import InventoryPredictionForm from "./pages/InventoryPredictionForm"
-import ProductManagement  from "./pages/ProductManagement"
-import ConsultantRegistration from "./pages/ConsultantRegistration"
-import HomeownerRegistration from "./pages/HomeownerRegistration"
+import Customer from './customer/Customer'
+import Industry from './industry/Industry'
+import InventoryPredictionForm from "./industry/InventoryPredictionForm"
+import ProductManagement  from "./industry/ProductManagement"
+import ConsultantRegistration from "./conultant/ConsultantRegistration"
+import HomeownerRegistration from "./customer/HomeownerRegistration"
 import ProductDetail from "./components/ProductDetail"
 import OrderTracking from "./pages/OrderTracking"
-import IndustryUpdateStatus from "./pages/IndustryUpdateStatus"
+import IndustryUpdateStatus from "./industry/IndustryUpdateStatus"
 import ReturnsRefunds from "./pages/ReturnsRefunds"
-import IndustryDashboard from "./pages/IndustryDashboard"
-import ConsultantDashboard from "./pages/ConsultantDashboard"
-import CustomerDashboard from "./pages/CustomerDashboard"
+import IndustryDashboard from "./dashboard/IndustryDashboard"
+import ConsultantDashboard from "./dashboard/ConsultantDashboard"
+import CustomerDashboard from "./dashboard/CustomerDashboard"
 import Wishlist from "./pages/Wishlist"
-import OrderHistory from "./pages/OrderHistory"
+import OrderHistory from "./conultant/OrderHistory"
 import imgcart24 from "./assets/imgcart24.jpg";
 import imgcart25 from "./assets/imgcart25.jpg";
 import imgcart26 from "./assets/imgcart26.jpg";
+import {products} from "./assets copy/assets"
 
 
-const products = [
-  { id: "0", img: imgcart24, name: "Gallery 25 Sundarbans", price: 499 },
-  { id: "1", img: imgcart25, name: "Zip Tote Basket", price: 140 },
-  { id: "2", img: imgcart26, name: "Halfsize Tote", price: 210 },
-  // Add more products...
-];
 
 function App() {
 
@@ -48,7 +43,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
-        <Route path='/home-decor/:productId' element={<ProductDetail products={products}/>} />
+        <Route path='/home-decor/:productId' element={<ProductDetail />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/login' element={<Login />} />
         <Route path='/consultants' element={<Consultants />} />

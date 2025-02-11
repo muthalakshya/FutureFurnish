@@ -31,7 +31,7 @@ const Newarrival = () => {
         <div className="sm:w-1/2 p-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {rightSectionImages.map((img, idx) => (
-              <Cards key={idx} imgProd={img} />
+              <Cards key={idx} imgProd={img} name={"Demo collection"} price={123} />
             ))}
           </div>
         </div>

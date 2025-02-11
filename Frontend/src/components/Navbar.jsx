@@ -2,14 +2,16 @@ import React, { useContext, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { FaShoppingCart } from "react-icons/fa";
 import { IoLogInSharp } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ShopContext } from "../content/ShopContext";
 import Logo from "../assets/Logo.png";
+import { assets } from "../assets copy/assets";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeButton, setActiveButton] = useState(""); // Track which button is active
-  const { toggleCart } = useContext(ShopContext);
+  const [activeButton, setActiveButton] = useState(""); 
+  const { toggleCart, getCartCount, token, setToken } = useContext(ShopContext);
+  const navigate = useNavigate(); 
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -17,98 +19,89 @@ const Navbar = () => {
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
+    setMobileMenuOpen(false); 
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setToken("");
+    navigate("/login");
   };
 
   return (
-    <nav className="bg-[#f1f9eb] w-full fixed z-10 border-b shadow-md" >
+    <nav className="bg-[#f1f9eb] w-full fixed z-10 border-b shadow-md">
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex items-center">
-          <img
-            className="w-32"
-            src={Logo}
-            // src="https://cdn.ddecor.com/static/version1737628305/frontend/Ddecor/nextgen/en_US/images/logo.svg"
-            alt="Logo"
-          />
+          <img className="w-32" src={Logo} alt="Logo" />
         </div>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6 font-bold">
-          <Link
-            to="/"
-            onClick={() => handleButtonClick("shop")}
-            className={`${
-              activeButton === "shop"
-                ? "bg-gray-800 text-white"
-                : "text-black"
-            } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}
-          >
-            Shop
-          </Link>
-          <Link
-            to="/about"
-            onClick={() => handleButtonClick("about")}
-            className={`${
-              activeButton === "about"
-                ? "bg-gray-800 text-white"
-                : "text-black"
-            } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}
-          >
-            About
-          </Link>
-          <Link
-            to="/home-decor"
-            onClick={() => handleButtonClick("home-decor")}
-            className={`${
-              activeButton === "home-decor"
-                ? "bg-gray-800 text-white"
-                : "text-black"
-            } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}
-          >
-            Home Decor
-          </Link>
-          <Link
-            to="/consultants"
-            onClick={() => handleButtonClick("consultants")}
-            className={`${
-              activeButton === "consultants"
-                ? "bg-gray-800 text-white"
-                : "text-black"
-            } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}
-          >
-            Consultants
-          </Link>
-          <Link
-            to="/industry"
-            onClick={() => handleButtonClick("industry")}
-            className={`${
-              activeButton === "industry"
-                ? "bg-gray-800 text-white"
-                : "text-black"
-            } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}
-          >
-            Industry
-          </Link>
-          <Link to={"/cart"} 
-            onClick={() => {handleButtonClick("cart"); toggleCart}}
-            className={`${
-              activeButton === "cart"
-                ? "bg-gray-800 text-white"
-                : "text-black"
-            } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}>
-            <FaShoppingCart className="w-full h-7 text-amber-400 px-2 cursor-pointer" />
-          </Link>
-            <Link to="/login" 
+          {["shop", "about", "home-decor", "consultants", "industry"].map((item) => (
+            <Link
+              key={item}
+              to={`/${item}`}
+              onClick={() => handleButtonClick(item)}
+              className={`${
+                activeButton === item ? "bg-gray-800 text-white" : "text-black"
+              } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}
+            >
+              {item.charAt(0).toUpperCase() + item.slice(1)}
+            </Link>
+          ))}
+
+          {!token ? (
+            <Link
+              to="/login"
               onClick={() => handleButtonClick("login")}
               className={`${
-                activeButton === "login"
-                  ? "bg-gray-800 text-white"
-                  : "text-black"
+                activeButton === "login" ? "bg-gray-800 text-white" : "text-black"
               } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}
             >
               <IoLogInSharp className="w-full h-7 text-amber-400 px-2 cursor-pointer" />
             </Link>
-
+          ) : (
+            <div className="flex items-center gap-6">
+              <img
+                onClick={() => setActiveButton("search")}
+                src={assets.search_icon}
+                className="w-5 cursor-pointer"
+                alt="Search"
+              />
+              <div className="group relative">
+                <img
+                  onClick={() => navigate("/profile")}
+                  className="w-5 cursor-pointer"
+                  src={assets.profile_icon}
+                  alt="Profile"
+                />
+                <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
+                  <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
+                    <p className="cursor-pointer hover:text-black">My Profile</p>
+                    <p onClick={() => navigate("/order-history")} className="cursor-pointer hover:text-black">
+                      Orders
+                    </p>
+                    <p onClick={logout} className="cursor-pointer hover:text-black">
+                      Logout
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <Link to="/cart" className="relative">
+                <img src={assets.cart_icon} className="w-5 min-w-5" alt="Cart" />
+                <p className="absolute top-[12px] right-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+                  {getCartCount()}
+                </p>
+              </Link>
+              <img
+                onClick={toggleMobileMenu}
+                src={assets.menu_icon}
+                className="w-5 cursor-pointer sm:hidden"
+                alt="Menu"
+              />
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -122,76 +115,41 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white  shadow-md">
-          <div className="flex justify-between px-8 py-4">
-            <div className="py-2" onClick={toggleCart}>
-              
-              <Link to="/cart" onClick={toggleMobileMenu}>
-                <FaShoppingCart className="w-8 h-8 text-black cursor-pointer" />
+        <div className="md:hidden bg-white shadow-md absolute w-full left-0 top-16 z-10">
+          <div className="flex flex-col space-y-4 px-4 py-4">
+            {["shop", "about", "home-decor", "consultants", "industry"].map((item) => (
+              <Link
+                key={item}
+                to={`/${item}`}
+                onClick={() => handleButtonClick(item)}
+                className={`${
+                  activeButton === item ? "bg-gray-800 text-white" : "text-gray-600"
+                } hover:text-gray-800 font-medium px-4 py-2 rounded-lg`}
+              >
+                {item.charAt(0).toUpperCase() + item.slice(1)}
               </Link>
-            </div>
-            <div className="py-2">
-              <Link to="/login" onClick={toggleMobileMenu}>
-                <IoLogInSharp className="w-8 h-8 text-black cursor-pointer" />
+            ))}
+            {!token ? (
+              <Link
+                to="/login"
+                onClick={() => handleButtonClick("login")}
+                className="text-gray-600 hover:text-gray-800 font-medium px-4 py-2 rounded-lg"
+              >
+                Login
               </Link>
-            </div>
-          </div>
-          <div className="flex flex-col space-y-4 px-4 py-4" onClick={toggleMobileMenu}>
-            <Link
-              to="/"
-              onClick={() => handleButtonClick("shop")}
-              className={`${
-                activeButton === "shop"
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-600"
-              } hover:text-gray-800 font-medium px-4 py-2 rounded-lg`}
-            >
-              Shop
-            </Link>
-            <Link
-              to="/about"
-              onClick={() => handleButtonClick("about")}
-              className={`${
-                activeButton === "about"
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-600"
-              } hover:text-gray-800 font-medium px-4 py-2 rounded-lg`}
-            >
-              About
-            </Link>
-            <Link
-              to="/home-decor"
-              onClick={() => handleButtonClick("home-decor")}
-              className={`${
-                activeButton === "home-decor"
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-600"
-              } hover:text-gray-800 font-medium px-4 py-2 rounded-lg`}
-            >
-              Home Decor
-            </Link>
-            <Link
-              to="/consultants"
-              onClick={() => handleButtonClick("consultants")}
-              className={`${
-                activeButton === "consultants"
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-600"
-              } hover:text-gray-800 font-medium px-4 py-2 rounded-lg`}
-            >
-              Consultants
-            </Link>
-            <Link
-              to="/industry"
-              onClick={() => handleButtonClick("industry")}
-              className={`${
-                activeButton === "industry"
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-600"
-              } hover:text-gray-800 font-medium px-4 py-2 rounded-lg`}
-            >
-              Industry
-            </Link>
+            ) : (
+              <>
+                <p onClick={() => navigate("/profile")} className="cursor-pointer hover:text-black px-4 py-2">
+                  My Profile
+                </p>
+                <p onClick={() => navigate("/order-history")} className="cursor-pointer hover:text-black px-4 py-2">
+                  Orders
+                </p>
+                <p onClick={logout} className="cursor-pointer hover:text-black px-4 py-2">
+                  Logout
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}

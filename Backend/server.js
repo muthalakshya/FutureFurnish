@@ -1,9 +1,9 @@
 import express, {json} from 'express';
 import "dotenv/config"
 import cors from 'cors'
-import  connectDB from '../config/mongodb.js'
-import connectCloudinary from '../config/cloudinary.js';
-import userRouter from '../routes/useRoute.js'
+import  connectDB from './config/mongodb.js'
+import connectCloudinary from './config/cloudinary.js';
+import userRouter from './routes/useRoute.js'
 
 
 const app = express();

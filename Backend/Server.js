@@ -18,7 +18,7 @@ app.use(cors())
 app.use('/api/user',userRouter)
 
 app.get('/',(req,res)=>{
-    res.send("Running at port 3000")
+    res.send("Running at port 4000")
 })
 
 app.listen(port,()=>{

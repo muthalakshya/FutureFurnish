@@ -1,13 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { FaShoppingCart } from "react-icons/fa";
 import { IoLogInSharp } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShopContext } from "../content/ShopContext";
 import Logo from "../assets/Logo.png";
 import { assets } from "../assets copy/assets";
 
 const Navbar = () => {
+  const location = useLocation();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(""); 
   const { toggleCart, getCartCount, token, setToken } = useContext(ShopContext);
@@ -28,6 +29,16 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === "/") {
+      setActiveButton("shop");
+    } else {
+      const active = path.split("/")[1];
+      setActiveButton(active);
+    }
+  }, [location.pathname]);
+
   return (
     <nav className="bg-[#f1f9eb] w-full fixed z-10 border-b shadow-md">
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between h-16">
@@ -38,7 +49,17 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6 font-bold">
-          {["shop", "about", "home-decor", "consultants", "industry"].map((item) => (
+        <Link
+              key={"shop"}
+              to={`/`}
+              onClick={() => handleButtonClick("shop")}
+              className={`${
+                activeButton === "shop" ? "bg-gray-800 text-white" : "text-black"
+              } px-3 py-2 hover:bg-black rounded-lg hover:text-white`}
+            >
+              {"shop".charAt(0).toUpperCase() + "shop".slice(1)}
+            </Link>
+          {[ "about", "home-decor", "consultants", "industry"].map((item) => (
             <Link
               key={item}
               to={`/${item}`}
@@ -117,14 +138,24 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-md absolute w-full left-0 top-16 z-10">
           <div className="flex flex-col space-y-4 px-4 py-4">
-            {["shop", "about", "home-decor", "consultants", "industry"].map((item) => (
+          <Link
+                key={"shop"}
+                to={`/`}
+                onClick={() => handleButtonClick("shop")}
+                className={`${
+                  activeButton === "shop" ? "bg-gray-800 text-white" : "text-gray-600"
+                }  font-medium px-4 py-2 rounded-lg`}
+              >
+                {"shop".charAt(0).toUpperCase() + "shop".slice(1)}
+              </Link>
+            {[ "about", "home-decor", "consultants", "industry"].map((item) => (
               <Link
                 key={item}
                 to={`/${item}`}
                 onClick={() => handleButtonClick(item)}
                 className={`${
                   activeButton === item ? "bg-gray-800 text-white" : "text-gray-600"
-                } hover:text-gray-800 font-medium px-4 py-2 rounded-lg`}
+                }  font-medium px-4 py-2 rounded-lg`}
               >
                 {item.charAt(0).toUpperCase() + item.slice(1)}
               </Link>
@@ -133,19 +164,36 @@ const Navbar = () => {
               <Link
                 to="/login"
                 onClick={() => handleButtonClick("login")}
-                className="text-gray-600 hover:text-gray-800 font-medium px-4 py-2 rounded-lg"
+                className="text-gray-600  font-medium px-4 py-2 rounded-lg"
               >
                 Login
               </Link>
             ) : (
               <>
-                <p onClick={() => navigate("/profile")} className="cursor-pointer hover:text-black px-4 py-2">
+                <p onClick={() => {navigate("/profile");handleButtonClick("profile")}} 
+                className={`${
+                  activeButton === "profile" ? "bg-gray-800 text-white" : "text-gray-600"
+                }  font-medium px-4 py-2 rounded-lg`}
+                >
                   My Profile
                 </p>
-                <p onClick={() => navigate("/order-history")} className="cursor-pointer hover:text-black px-4 py-2">
+                <p onClick={() => {navigate("/cart");handleButtonClick("cart")}} 
+                className={`${
+                  activeButton === "cart" ? "bg-gray-800 text-white" : "text-gray-600"
+                }  font-medium px-4 py-2 rounded-lg`}
+                >
+                  Cart
+                </p>
+                <p onClick={() => {navigate("/order-history");handleButtonClick("order-history")}} 
+                className={`${
+                  activeButton === "order-history" ? "bg-gray-800 text-white" : "text-gray-600"
+                }  font-medium px-4 py-2 rounded-lg`}
+                >
                   Orders
                 </p>
-                <p onClick={logout} className="cursor-pointer hover:text-black px-4 py-2">
+                <p onClick={logout} 
+                  className="text-gray-600  font-medium px-4 py-2 rounded-lg"
+                >
                   Logout
                 </p>
               </>

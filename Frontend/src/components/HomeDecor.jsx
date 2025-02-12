@@ -65,7 +65,7 @@ const filters = [
 
 export default function HomeDecor() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  console.log(products[0].image)
+  console.log(products[0]._id)
   return (
     <div className="bg-[#f1f9eb] pt-16" >
       {/* Mobile Filter Dialog */}

@@ -16,7 +16,7 @@ const About = () => {
         style={{ backgroundImage: `url(https://cdn.ddecor.com/static/version1738578070/frontend/Ddecor/nextgen/en_US/images/design-consultation.jpg)` }}
       >
         <div className="absolute inset-0  bg-opacity-50"></div>
-        <div className="relative z-10 max-w-2xl">
+        <div className="relative  max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}

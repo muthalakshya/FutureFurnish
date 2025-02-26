@@ -42,6 +42,8 @@ const userSchema = new mongoose.Schema(
     },
     additionalInfo: { type: String },
     message: { type: String },
+
+    cartData: { type: Object, default: {} }
   },
   { timestamps: true } // Adds createdAt and updatedAt fields
 );

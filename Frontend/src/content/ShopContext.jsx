@@ -19,6 +19,7 @@ const ShopContextProvider = (props)=>{
     const navigate = useNavigate()
     const [isCartOpen, setCartOpen] = useState(false);
     const [registrationType, setRegistrationType] = useState("");
+    const [userType, setUserType] = useState(JSON.parse(localStorage.getItem("registrationData")).userType || "");
 
     const toggleCart = () => setCartOpen(!isCartOpen);
 
@@ -36,18 +37,16 @@ const ShopContextProvider = (props)=>{
             cartData[itemId][size] = 1;  // Set quantity for the selected size
         }
         setCartItems(cartData);  // Update state with new cartData
-        console.log(cartData)
-        // if(token){
-        //     try {
-        //         await axios.post(backendUrl+'/api/cart/add',{itemId,size}, {headers:{token}})
-        //     } catch (error) {
-        //         console.log(error)
-        //         toast.error(error.message)
-        //     }
-        // }
+
+        if(token){
+            try {
+                await axios.post(backendUrl+'/api/cart/add',{itemId,size}, {headers:{token}})
+            } catch (error) {
+                console.log(error)
+                toast.error(error.message)
+            }
+        }
     };
-
-
 
     const getCartCount = ()=> {
         let totalCount = 0;
@@ -110,15 +109,15 @@ const ShopContextProvider = (props)=>{
     }
 
     const getUserCart = async (token)=>{
-        // try {
-        //     const respone = await axios.post(backendUrl+'/api/cart/get',{}, {headers:{token}})
-        //     if(respone.data.success){
-        //         setCartItems(respone.data.cartData)
-        //     }
-        // } catch (error) {
-        //     console.log(error)
-        //     toast.error(error.message)
-        // }
+        try {
+            const respone = await axios.post(backendUrl+'/api/cart/get',{}, {headers:{token}})
+            if(respone.data.success){
+                setCartItems(respone.data.cartData)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
     }
 
     useEffect(()=>{
@@ -129,6 +128,7 @@ const ShopContextProvider = (props)=>{
         if (!token && localStorage.getItem('token') ) {
             setToken(localStorage.getItem('token'))
             getUserCart(localStorage.getItem('token'))
+            console.log(userType)
         }
     },[])
 
@@ -136,16 +136,17 @@ const ShopContextProvider = (props)=>{
         products ,currency, delivery_fee,
         search,setSearch,setShowSearch,showSearch,
         cartItems,
-         addToCart, 
-        getCartCount, 
-         setCartItems,
+        addToCart,
+        getCartCount,
+        setCartItems,
         updateQuantity,
-        getCartAmount, 
+        getCartAmount,
         navigate,
         backendUrl,
         setToken, token,
         isCartOpen, toggleCart, setCartOpen ,
         registrationType, setRegistrationType,
+        userType, setUserType,
     }
     return (
         <ShopContext.Provider value={value}>

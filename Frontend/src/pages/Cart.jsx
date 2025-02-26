@@ -36,7 +36,7 @@ export default function Cart() {
   
   const { products, currency, cartItems, updateQuantity, navigate, getCartAmount} = useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
-  console.log(cartData)
+
   useEffect(()=>{
     if(products.length>0){
       const tempData = [];
@@ -138,8 +138,7 @@ export default function Cart() {
           Shipping and taxes calculated at checkout.
         </p>
         <div className="mt-6">
-          <a
-            href="#"
+          <a onClick={()=>navigate("/place-order")}
             className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-sm sm:text-base font-medium text-white shadow-xs hover:bg-indigo-700"
           >
             Checkout
@@ -150,7 +149,7 @@ export default function Cart() {
             or{" "}
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => navigate("/home-decor")}
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
               Continue Shopping

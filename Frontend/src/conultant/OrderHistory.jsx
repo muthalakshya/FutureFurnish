@@ -26,7 +26,7 @@ const Orders = () => {
             allOrdersItem.push(item)
           })
         })
-        console.log(allOrdersItem)
+        // console.log(allOrdersItem)
         setOrderData(allOrdersItem.reverse())
       }
     } catch (error) {
@@ -35,7 +35,7 @@ const Orders = () => {
     }
   }
 
-  console.log(orderData.length)
+  // console.log(orderData.length)
 
   useEffect(()=>{
     loadOrderData()

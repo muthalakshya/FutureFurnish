@@ -36,9 +36,9 @@ import IndustryOrders from './industry/IndustryOrders';
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { token, userType } = useContext(ShopContext);
 
-  console.log("Token:", token);
+  // console.log("Token:", token);
   console.log("User Type:", userType);
-  console.log("Allowed Roles:", allowedRoles);
+  // console.log("Allowed Roles:", allowedRoles);
 
   if (!token) {
     console.warn("No token found! Redirecting to login.");

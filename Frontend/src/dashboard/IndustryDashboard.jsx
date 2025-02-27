@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -34,6 +34,8 @@ import {
 } from "recharts";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../content/ShopContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const orderHistoryData = [
   { month: "Jan", orders: 120, returns: 10, profit: 8000, interest: 90 },
@@ -69,7 +71,7 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const {backendUrl,token,currency, totalOrders , setTotalOrders, orderTotalValues, setOrderTotalValues} = useContext(ShopContext)
-
+  const  [orderData, setOrderData] = useState([])
 
   const handleTabChange = (_, newValue) => {
     setActiveTab(newValue);
@@ -78,6 +80,49 @@ const Dashboard = () => {
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
+
+  const loadOrderData = async () => {
+    try {
+      if (!token) return;
+  
+      const response = await axios.post(backendUrl + "/api/order/list", {}, { headers: { token } });
+  
+      if (response.data.success) {
+        let allOrdersItem = [];
+        let totalValue = 0;
+  
+        response.data.orders.forEach((order) => {
+          order.items.forEach((item) => {
+            totalValue += item.price * item.quantity;
+            allOrdersItem.push(item);
+          });
+        });
+  
+        setOrderData(allOrdersItem.reverse());
+        setOrderTotalValues(totalValue);
+        setTotalOrders(allOrdersItem.length);
+  
+        // Store in localStorage
+        localStorage.setItem("totalValue", totalValue);
+        localStorage.setItem("totalOrders", allOrdersItem.length);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const savedTotalOrders = localStorage.getItem("totalOrders");
+    const savedTotalValue = localStorage.getItem("totalValue");
+  
+    if (savedTotalOrders) setTotalOrders(Number(savedTotalOrders));
+    if (savedTotalValue) setOrderTotalValues(Number(savedTotalValue));
+  
+    loadOrderData();
+  }, [token]);
+
+  loadOrderData();
 
   return (
     <div className="sm:px-24 px-6 space-y-8 py-28">

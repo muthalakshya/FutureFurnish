@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { ShopContext } from "../content/ShopContext";
 
 const IndustryForm = () => {
-  const {token, setToken, navigate , backendUrl, setRegistrationType} = useContext(ShopContext)
+  const {token, setToken, navigate , backendUrl, setRegistrationType,setUserType} = useContext(ShopContext)
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -59,6 +59,8 @@ const IndustryForm = () => {
       if (response.data.success) {
         setToken(response.data.token)
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem('userTypeData',"industry")
+        setUserType("industry")
         toast.success("Registration successful!");
         setFormData({
           fullName: "",

@@ -11,7 +11,7 @@ const Navbar = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(""); 
-  const { toggleCart, getCartCount, token, setToken } = useContext(ShopContext);
+  const { toggleCart, getCartCount, token, setToken,setUserType } = useContext(ShopContext);
   const navigate = useNavigate(); 
 
   const toggleMobileMenu = () => {
@@ -25,7 +25,9 @@ const Navbar = () => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userTypeData");
     setToken("");
+    setUserType("");
     navigate("/login");
   };
 
@@ -44,7 +46,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex items-center">
-          <img className="w-32" src={Logo} alt="Logo" />
+          <img className="w-32" src={Logo} alt="Logo" onClick={()=>navigate("/")} />
         </div>
 
         {/* Desktop Menu */}

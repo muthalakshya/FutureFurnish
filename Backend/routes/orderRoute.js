@@ -3,11 +3,13 @@ import {placeOrder, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders,
 import adminAuth from '../middleware/adminAuth.js'
 import authUser from '../middleware/auth.js'
 
-const orderRouter = express .Router()
+const orderRouter = express.Router()
 
 // Admin Features
-orderRouter.post('/list', adminAuth, allOrders)
-orderRouter.post('/status', adminAuth, updateStatus)
+// orderRouter.post('/list', adminAuth, allOrders)
+// orderRouter.post('/status', adminAuth, updateStatus)
+orderRouter.post('/list', allOrders)
+orderRouter.post('/status', updateStatus)
 
 // Payment Features
 orderRouter.post('/place', authUser, placeOrder)

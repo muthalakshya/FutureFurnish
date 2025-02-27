@@ -85,7 +85,7 @@ const Placeorders = () => {
           const response = await axios.post(backendUrl+'/api/order/place',orderData, {headers:{token}})
           if(response.data.success){
             setCartItems({})
-            navigate('/orders')
+            navigate('/order-history')
           }else{
             toast.error(response.data.message)
           }

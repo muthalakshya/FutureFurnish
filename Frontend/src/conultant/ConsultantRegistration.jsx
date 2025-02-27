@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { ShopContext } from "../content/ShopContext";
 
 const ConsultantRegistration = () => {
-  const {token, setToken, navigate , backendUrl, setRegistrationType} = useContext(ShopContext)
+  const {token, setToken, navigate , backendUrl, setRegistrationType,setUserType} = useContext(ShopContext)
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -57,7 +57,7 @@ const ConsultantRegistration = () => {
     }
 
     const submissionData = {
-      userType: "customer", // Specify user type
+      userType: "consultant", // Specify user type
       fullName: formData.fullName,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
@@ -90,6 +90,8 @@ const ConsultantRegistration = () => {
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem('userTypeData',"consultant")
+        setUserType("consultant")
         toast.success("Registration successful!");
         setToken(response.data.token)
         setFormData({

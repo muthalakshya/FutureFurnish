@@ -30,21 +30,29 @@ import OrderHistory from "./conultant/OrderHistory";
 import Placeorder from "./pages/Placeorders";
 import { ShopContext } from './content/ShopContext';
 import Unauthorized from './components/Unauthorized';
+import IndustryOrders from './industry/IndustryOrders';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { token, userType } = useContext(ShopContext);
 
+  console.log("Token:", token);
+  console.log("User Type:", userType);
+  console.log("Allowed Roles:", allowedRoles);
+
   if (!token) {
+    console.warn("No token found! Redirecting to login.");
     return <Navigate to="/login" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(userType)) {
+    console.warn("User type not authorized! Redirecting to unauthorized.");
     return <Navigate to="/unauthorized" replace />;
   }
 
   return children;
 };
+
 
 function App() {
   return (
@@ -73,6 +81,7 @@ function App() {
         
         <Route path="/order-history" element={<OrderHistory />} />
         <Route path='/place-order' element={<Placeorder />} />
+        <Route path='/industry-order' element={<IndustryOrders />} />
 
         {/* Protected Routes */}
         <Route path="/industry-dashboard" element={

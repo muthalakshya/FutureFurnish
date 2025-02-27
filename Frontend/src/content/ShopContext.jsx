@@ -19,7 +19,9 @@ const ShopContextProvider = (props)=>{
     const navigate = useNavigate()
     const [isCartOpen, setCartOpen] = useState(false);
     const [registrationType, setRegistrationType] = useState("");
-    const [userType, setUserType] = useState(JSON.parse(localStorage.getItem("registrationData")).userType || "");
+    const [userType, setUserType] = useState("");
+    const [totalOrders , setTotalOrders] = useState(0)
+    const [orderTotalValues, setOrderTotalValues] = useState(0)
 
     const toggleCart = () => setCartOpen(!isCartOpen);
 
@@ -124,13 +126,29 @@ const ShopContextProvider = (props)=>{
         getProductData()
     },[])
 
+    // useEffect(() => {
+    //     localStorage.setItem("userTypeData", userType);
+    //   }, [token, userType]);
+
     useEffect (()=>{
         if (!token && localStorage.getItem('token') ) {
             setToken(localStorage.getItem('token'))
             getUserCart(localStorage.getItem('token'))
             console.log(userType)
+            setUserType(localStorage.getItem("userTypeData"))
+            console.log(userType)
         }
     },[])
+    useEffect(() => {
+        if (token) {
+          const savedTotalOrders = localStorage.getItem("totalOrders");
+          const savedTotalValue = localStorage.getItem("totalValue");
+      
+          if (savedTotalOrders) setTotalOrders(Number(savedTotalOrders));
+          if (savedTotalValue) setOrderTotalValues(Number(savedTotalValue));
+        }
+      }, [token]);
+      
 
     const value = {
         products ,currency, delivery_fee,
@@ -147,6 +165,8 @@ const ShopContextProvider = (props)=>{
         isCartOpen, toggleCart, setCartOpen ,
         registrationType, setRegistrationType,
         userType, setUserType,
+        totalOrders , setTotalOrders,
+        orderTotalValues, setOrderTotalValues
     }
     return (
         <ShopContext.Provider value={value}>

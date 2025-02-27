@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Card,
   CardContent,
@@ -33,6 +33,7 @@ import {
   Area,
 } from "recharts";
 import { Link } from "react-router-dom";
+import { ShopContext } from "../content/ShopContext";
 
 const orderHistoryData = [
   { month: "Jan", orders: 120, returns: 10, profit: 8000, interest: 90 },
@@ -67,6 +68,8 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const {backendUrl,token,currency, totalOrders , setTotalOrders, orderTotalValues, setOrderTotalValues} = useContext(ShopContext)
+
 
   const handleTabChange = (_, newValue) => {
     setActiveTab(newValue);
@@ -94,8 +97,19 @@ const Dashboard = () => {
             </Card>
           </Link>
         </Grid>
-        <Grid item xs={12} md={1.7}>
+        <Grid item xs={12} md={1.5}>
           <Link to="/product-management">
+            <Card>
+              <CardContent className="bg-blue-500 text-white ">
+                <Typography color="text.main" variant="h5">
+                  View Product
+                </Typography>
+              </CardContent>
+            </Card>
+          </Link>
+        </Grid>
+        <Grid item xs={12} md={1.7}>
+          <Link to="/industry-order">
             <Card>
               <CardContent className="bg-blue-500 text-white">
                 <Typography color="text.main" variant="h5">
@@ -147,7 +161,7 @@ const Dashboard = () => {
           <Card>
             <CardContent>
               <Typography color="text.secondary">Total Orders</Typography>
-              <Typography variant="h5">3,450</Typography>
+              <Typography variant="h5">{totalOrders}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -155,7 +169,7 @@ const Dashboard = () => {
           <Card>
             <CardContent>
               <Typography color="text.secondary">Total Revenue</Typography>
-              <Typography variant="h5">$245,000</Typography>
+              <Typography variant="h5">{orderTotalValues}</Typography>
             </CardContent>
           </Card>
         </Grid>

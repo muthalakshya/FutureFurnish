@@ -7,7 +7,7 @@ import { ShopContext } from "../content/ShopContext";
 const Login = () => {
   
   const [currentState, setCurrentState] = useState("Login"); // Track current state (Login or Sign Up)
-  const {token, setToken, navigate , backendUrl, setRegistrationType} = useContext(ShopContext)
+  const {token, setToken, navigate , backendUrl, setRegistrationType,setUserType,userType} = useContext(ShopContext)
   
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -22,6 +22,9 @@ const Login = () => {
         if(response.data.success){
           setToken(response.data.token)
           localStorage.setItem('token',response.data.token)
+          localStorage.setItem('userTypeData',response.data.userTypeData)
+          setUserType(response.data.userTypeData)
+          // navigate(`/${localStorage.getItem("userTypeData")}-dashboard`)
         }else{
           toast.error(response.data.message)
         }
@@ -34,7 +37,9 @@ const Login = () => {
 
   useEffect(()=>{
     if(token){
-      navigate('/customer-dashboard')
+      setUserType(localStorage.getItem("userTypeData"))
+      navigate(`/${localStorage.getItem("userTypeData")}-dashboard`)
+          console.log(userType)
     }
   },[token])
 

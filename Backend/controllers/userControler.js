@@ -12,8 +12,9 @@ const createToken = (userId) => {
 const loginUser = async (req, res) => {
     // Implement login logic here
     try {
-        const { email, password } = req.body;
+        const { email, password, userType } = req.body;
         const user = await userModel.findOne({email});
+        // console.log(user.userType)
 
         if (!user)
             return res.json({success:false, message: "User doesn't exists"})
@@ -22,7 +23,8 @@ const loginUser = async (req, res) => {
 
         if (isMatch) {
             const token = createToken(user._id)
-            res.json({success : true, token})
+            const userTypeData = user.userType
+            res.json({success : true, token,userTypeData})
         }
         else {
             res.json({success: false, message: 'Invalid credentials'})
@@ -113,5 +115,6 @@ const adminLogin = async (req, res) => {
         res.json({ success: false, message: error.message})
     }
 };
+
 
 export { loginUser, registerUser, adminLogin };

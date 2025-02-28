@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,6 +22,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { ShopContext } from "../content/ShopContext";
+import { Link } from "react-router-dom";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -49,6 +51,7 @@ const revenueData = [
 
 const ConsultantDashboard = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const {navigate} = useContext(ShopContext)
 
   const handleTabChange = (_, newValue) => {
     setActiveTab(newValue);
@@ -70,11 +73,14 @@ const ConsultantDashboard = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={2}>
+          <Link to={"/design-product"}>
           <Card>
             <CardContent className="bg-blue-500 text-white">
-              <Typography variant="h5">Create Proposal</Typography>
+              <Typography variant="h5" >Create Proposal</Typography>
             </CardContent>
           </Card>
+          </Link>
+          
         </Grid>
         <Grid item xs={12} md={2}>
           <Card>

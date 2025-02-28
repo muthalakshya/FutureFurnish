@@ -32,6 +32,8 @@ import { ShopContext } from './content/ShopContext';
 import Unauthorized from './components/Unauthorized';
 import IndustryOrders from './industry/IndustryOrders';
 import ProfilePage from './pages/ProfilePage';
+import DesignList from './conultant/DesignList';
+import Demo from './pages/Demo';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -80,6 +82,7 @@ function App() {
         <Route path="/product-management" element={<ProductManagement />} />
         <Route path="/order-tracking" element={<OrderTracking />} />
         <Route path="/returns-refunds" element={<ReturnsRefunds />} />
+        <Route path="/demo" element={<Demo />} />
         
         <Route path="/order-history" element={<OrderHistory />} />
         <Route path='/place-order' element={<Placeorder />} />
@@ -95,6 +98,12 @@ function App() {
         <Route path="/consultant-dashboard" element={
           <ProtectedRoute allowedRoles={["consultant"]}>
             <ConsultantDashboard />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/design-product" element={
+          <ProtectedRoute allowedRoles={["consultant"]}>
+            <DesignList />
           </ProtectedRoute>
         } />
 

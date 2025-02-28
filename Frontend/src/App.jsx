@@ -31,6 +31,7 @@ import Placeorder from "./pages/Placeorders";
 import { ShopContext } from './content/ShopContext';
 import Unauthorized from './components/Unauthorized';
 import IndustryOrders from './industry/IndustryOrders';
+import ProfilePage from './pages/ProfilePage';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -70,6 +71,7 @@ function App() {
         <Route path="/homeowner-registration" element={<HomeownerRegistration />} />
         <Route path="/industry" element={<Industry />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<ProfilePage />} />
 
         <Route path='/consultants' element={<Consultants />} />
         <Route path='/home-decor' element={<HomeDecor />} />

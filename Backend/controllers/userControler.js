@@ -5,7 +5,7 @@ import userModel from '../models/userModel.js';  // Keep the .js extension
 
 // Function to create JWT token
 const createToken = (userId) => {
-    return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '100h' });
 };
 
 // Route for user login
@@ -14,7 +14,7 @@ const loginUser = async (req, res) => {
     try {
         const { email, password, userType } = req.body;
         const user = await userModel.findOne({email});
-        // console.log(user.userType)
+        // console.log(user)
 
         if (!user)
             return res.json({success:false, message: "User doesn't exists"})
@@ -34,6 +34,36 @@ const loginUser = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
+
+const userProfile = async (req, res) => {
+  try {
+    // Extract token from headers
+    const token = req.headers.authorization?.split(" ")[1]; 
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Unauthorized: No token provided" });
+    }
+
+    // Decode token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    // Find user in the database
+    const user = await userModel.findById(userId).select("-password"); // Exclude password
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Send success response
+    res.json({ success: true, user });
+
+  } catch (error) {
+    console.error("User Profile Error:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 
 const registerUser = async (req, res) => {
     try {
@@ -117,4 +147,4 @@ const adminLogin = async (req, res) => {
 };
 
 
-export { loginUser, registerUser, adminLogin };
+export { loginUser, registerUser, adminLogin, userProfile };

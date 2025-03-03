@@ -1,0 +1,90 @@
+[
+  {
+    "id": "front",
+    "name": "Front Side",
+    "color": "#d4b895",
+    "image": null,
+    "width": "6",
+    "height": "8",
+    "up": "0",
+    "right": "0",
+    "forward": "5"
+  },
+  {
+    "id": "back",
+    "name": "Back Side",
+    "color": "#d4b895",
+    "image": null,
+    "width": "6",
+    "height": "8",
+    "up": "0",
+    "right": "0",
+    "forward": "-2"
+  },
+  {
+    "id": "left",
+    "name": "Left Side",
+    "color": "#d4b895",
+    "image": null,
+    "width": "3",
+    "height": "8",
+    "up": "0",
+    "right": "2",
+    "forward": "0"
+  },
+  {
+    "id": "right",
+    "name": "Right Side",
+    "color": "#d4b895",
+    "image": null,
+    "width": "3",
+    "height": "8",
+    "up": "0",
+    "right": "-2",
+    "forward": "3"
+  },
+  {
+    "id": "top",
+    "name": "Top Side",
+    "color": "#d4b895",
+    "image": null,
+    "width": "6",
+    "height": "3",
+    "up": "2",
+    "right": "0",
+    "forward": "0"
+  },
+  {
+    "id": "bottom",
+    "name": "Bottom Side",
+    "color": "#d4b895",
+    "image": null,
+    "width": "6",
+    "height": "3",
+    "up": "-2",
+    "right": "0",
+    "forward": "5"
+  },
+  {
+    "id": "topfront",
+    "name": "Top Front Side",
+    "color": "#d4b895",
+    "image": null,
+    "width": "6",
+    "height": "4",
+    "up": "-3.6",
+    "right": "0",
+    "forward": "5"
+  },
+  {
+    "id": "topback",
+    "name": "Top Back Side",
+    "color": "#d4b895",
+    "image": null,
+    "width": "6",
+    "height": "4",
+    "up": "-3.6",
+    "right": "0",
+    "forward": "-2"
+  }
+]

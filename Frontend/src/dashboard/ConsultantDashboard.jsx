@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -52,10 +52,45 @@ const revenueData = [
 const ConsultantDashboard = () => {
   const [activeTab, setActiveTab] = useState(0);
   const {navigate} = useContext(ShopContext)
+  const {backendUrl,token,currency} = useContext(ShopContext)
+  const  [orderData, setOrderData] = useState([])
 
   const handleTabChange = (_, newValue) => {
     setActiveTab(newValue);
   };
+
+  const loadOrderData = async ()=>{
+    try {
+      if(!token){
+        return null
+      }
+      const response = await axios.post(backendUrl+'/api/order/userorders',{},{headers:{token}})
+      // console.log(response.data)
+      if(response.data.success){
+        let allOrdersItem = []
+        response.data.orders.map((order)=>{
+          order.items.map((item)=>{
+            item['status'] = order.status
+            item['payment'] = order.payment
+            item['paymentMethod']  = order.paymentMethod
+            item['date']  = order.date
+            allOrdersItem.push(item)
+          })
+        })
+        // console.log(allOrdersItem)
+        setOrderData(allOrdersItem.reverse())
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
+  // console.log(orderData.length)
+
+  useEffect(()=>{
+    loadOrderData()
+  },[token])
 
   return (
     <div className="sm:px-24 px-6 space-y-8 py-28">
@@ -83,11 +118,14 @@ const ConsultantDashboard = () => {
           
         </Grid>
         <Grid item xs={12} md={2}>
-          <Card>
+        <Link to={"/consultant-product"}>
+        <Card>
             <CardContent className="bg-blue-500 text-white">
               <Typography variant="h5">View Projects</Typography>
             </CardContent>
           </Card>
+        </Link>
+          
         </Grid>
         <Grid item xs={12} md={2}>
           <Card>

@@ -34,6 +34,10 @@ import IndustryOrders from './industry/IndustryOrders';
 import ProfilePage from './pages/ProfilePage';
 import DesignList from './conultant/DesignList';
 import Demo from './pages/Demo';
+import PageDesign from './conultant/PageDesign';
+import ModelViewer from './conultant/ModelViewer';
+import Table3d from './conultant/Table3d';
+import ConsultantProduct from './conultant/ConsultantProduct';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -87,6 +91,8 @@ function App() {
         <Route path="/order-history" element={<OrderHistory />} />
         <Route path='/place-order' element={<Placeorder />} />
         <Route path='/industry-order' element={<IndustryOrders />} />
+        <Route path="/viewer" element={<ModelViewer />} />
+        <Route path='/consultant-product' element={<ConsultantProduct />} />
 
         {/* Protected Routes */}
         <Route path="/industry-dashboard" element={
@@ -95,16 +101,25 @@ function App() {
           </ProtectedRoute>
         } />
 
+        <Route path="/design-jute" element={<PageDesign />}/>
+        <Route path="/design-table" element={<Table3d />}/>
+
         <Route path="/consultant-dashboard" element={
           <ProtectedRoute allowedRoles={["consultant"]}>
             <ConsultantDashboard />
           </ProtectedRoute>
         } />
 
-        <Route path="/design-product" element={
+        {/* <Route path="/design-product" element={
           <ProtectedRoute allowedRoles={["consultant"]}>
             <DesignList />
           </ProtectedRoute>
+        } /> */}
+
+        <Route path="/design-product" element={
+          // <ProtectedRoute allowedRoles={["consultant"]}>
+            <DesignList />
+          // </ProtectedRoute>
         } />
 
         <Route path="/customer-dashboard" element={

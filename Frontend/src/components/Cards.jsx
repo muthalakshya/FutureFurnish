@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const Cards = ({ imgProd, productId, name, description, price,  sizes }) => {
   const navigate = useNavigate();
+  // console.log(imgProd, productId, name, description, price,  sizes)
 
   return (
     <div

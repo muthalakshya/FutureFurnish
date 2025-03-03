@@ -5,8 +5,7 @@ import { ShopContext } from "../content/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const PageDesign = () => {
-  const navigate = useNavigate();
+const Table3d = () => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
@@ -14,65 +13,26 @@ const PageDesign = () => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const { token, backendUrl, save3d, setSave3d } = useContext(ShopContext);
   const [sides, setSides] = useState([
-    { id: "front", name: "Front Side", color: "#d4b895", image: null, width:"6",height:"8", up:"0",right:"0", forward:"5" },
-    { id: "back", name: "Back Side", color: "#d4b895", image: null, width:"6",height:"8", up:"0",right:"0", forward:"-2" },
-    { id: "left", name: "Left Side", color: "#d4b895", image: null, width:"3",height:"8", up:"0",right:"2", forward:"0" },
-    { id: "right", name: "Right Side", color: "#d4b895", image: null, width:"3",height:"8", up:"0",right:"-2", forward:"3" },
-    { id: "top", name: "Top Side", color: "#d4b895", image: null, width:"6",height:"3", up:"2",right:"0", forward:"0" },
-    { id: "bottom", name: "Bottom Side", color: "#d4b895", image: null, width:"6",height:"3", up:"-2",right:"0", forward:"5" },
-    { id: "topfront", name: "Top Front Side", color: "#d4b895", image: null, width:"6",height:"4", up:"-3.6",right:"0", forward:"5" },
-    { id: "topback", name: "Top Back Side", color: "#d4b895", image: null, width:"6",height:"4", up:"-3.6",right:"0", forward:"-2" },
+    { id: "front", name: "Front Side", color: "#d4b895", image: null, width:"27",height:"2", up:"0",right:"0", forward:"14"  },
+    { id: "back", name: "Back Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"0"   },
+    { id: "left", name: "Left Side", color: "#d4b895", image: null , width:"14",height:"2", up:"0",right:"0", forward:"0"   },
+    { id: "right", name: "Right Side", color: "#d4b895", image: null , width:"14",height:"2", up:"0",right:"0", forward:"13"   },
+    { id: "top", name: "Top Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+    { id: "bottom", name: "Bottom Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+    { id: "topfront", name: "Top Front Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+    { id: "topback", name: "Top Back Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+    { id: "fr", name: "Front off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"25", forward:"13.9"   },
+    { id: "br", name: "Back off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"0", forward:"0"   },
+    { id: "rr", name: "Right off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"-2", forward:"27"   },
+    { id: "lr", name: "Left off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"12", forward:"0"   },
+    { id: "fl", name: "Front off Left Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"0", forward:"13.9"   },
+    { id: "bl", name: "Back off Left Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"25", forward:"0"   },
+    { id: "rl", name: "Right off Left Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"-14", forward:"27"   },
+    { id: "ll", name: "Left off Left Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"0", forward:"0"   },
   ]);
   const [activeSide, setActiveSide] = useState("front");
   const fileInputRef = useRef(null);
   const cubeRef = useRef(null);
-
-  const download3DModel = () => {
-    // Create a copy of sides with base64 image data
-    const sidesWithImageData = sides.map(side => {
-      if (side.image) {
-        // Get the image data
-        const img = new Image();
-        img.src = side.image.url;
-        
-        // Create a canvas to convert the image to base64
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        
-        // Get base64 data URL
-        const dataUrl = canvas.toDataURL('image/jpeg').split(',')[1];
-        
-        // Return the side with embedded image data
-        return {
-          ...side,
-          image: {
-            ...side.image,
-            dataUrl
-          }
-        };
-      }
-      return side;
-    });
-    
-    // Save to localStorage for the viewer page
-    localStorage.setItem('3dModelData', JSON.stringify(sidesWithImageData));
-    
-    // Also download as JSON file
-    const modelData = JSON.stringify(sidesWithImageData, null, 2);
-    const blob = new Blob([modelData], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-  
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "3D_Model.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
 
   // Handle mouse rotation for the cube
   const handleMouseDown = (e) => {
@@ -98,7 +58,7 @@ const PageDesign = () => {
         
         const payload = { userId, email, sides };
   
-        const response = await fetch(`${backendUrl}/api/user3d/add-jute-bag`, {
+        const response = await fetch(`${backendUrl}/api/user3d/add-table`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -110,7 +70,7 @@ const PageDesign = () => {
         const data = await response.json();
   
         if (response.ok) {
-          toast.success("Jute Bag stored successfully!");
+          toast.success("Table stored successfully!");
           
           // Use localStorage to communicate with parent window
           localStorage.setItem("save3d", "true");
@@ -125,15 +85,15 @@ const PageDesign = () => {
             window.close();
           }, 1000);
         } else {
-          toast.error(`Failed to store Jute Bag: ${data.error}`);
+          toast.error(`Failed to store Table: ${data.error}`);
         }
       } else {
         console.error(resp.data.message);
         toast.error("Failed to verify user profile.");
       }
     } catch (error) {
-      console.error("Error storing Jute Bag:", error);
-      toast.error("Something went wrong while storing Jute Bag.");
+      console.error("Error storing Table:", error);
+      toast.error("Something went wrong while storing Table.");
     }
   };
 
@@ -176,13 +136,37 @@ const PageDesign = () => {
         case "front":
           setRotation({ x: 0, y: 0 });
           break;
+        case "fl":
+          setRotation({ x: 0, y: 0 });
+          break;
+        case "fr":
+          setRotation({ x: 0, y: 0 });
+          break;
         case "back":
           setRotation({ x: 0, y: 180 });
           break;
+          case "br":
+            setRotation({ x: 0, y: 180 });
+            break;
+          case "bl":
+            setRotation({ x: 0, y: 180 });
+            break;
         case "left":
           setRotation({ x: 0, y: 90 });
           break;
+          case "ll":
+            setRotation({ x: 0, y: 90 });
+            break;
+            case "lr":
+              setRotation({ x: 0, y: 90 });
+              break;
         case "right":
+          setRotation({ x: 0, y: -90 });
+          break;
+        case "rl":
+          setRotation({ x: 0, y: -90 });
+          break;
+        case "rr":
           setRotation({ x: 0, y: -90 });
           break;
         case "top":
@@ -197,6 +181,7 @@ const PageDesign = () => {
         case "topback":
           setRotation({ x: -45, y: 180 });
           break;
+        
         default:
           // For custom sides, don't change the rotation
           break;
@@ -246,6 +231,7 @@ const PageDesign = () => {
       )
     );
   };
+
   const changeSideWidth = (sideId, color) => {
     setSides(
       sides.map((side) =>
@@ -286,7 +272,6 @@ const PageDesign = () => {
     );
   };
 
-
   const changeActiveSide = (sideId) => {
     setActiveSide(sideId);
   };
@@ -316,6 +301,7 @@ const PageDesign = () => {
         "bottom",
         "topback",
         "topfront",
+        "fr", "fl","br", "bl","rr", "rl","lr", "ll",
       ].includes(sideId)
     )
       return;
@@ -348,12 +334,14 @@ const PageDesign = () => {
     setRotation({ x: 0, y: 0 });
   };
 
+  
+
 
 
   return (
-    <div className="flex h-screen bg-gray-100 pt-16 mb-0">
+    <div className="flex h-screen bg-gray-100 pt-16 mb-72">
       {/* Left sidebar for image uploading and selection */}
-      <div className="w-80 bg-white shadow-md flex flex-col">
+      <div className="w-80  bg-white shadow-md flex flex-col">
         <div className="p-4 border-b">
           <h2 className="text-lg font-medium">Image Library</h2>
           <button
@@ -411,9 +399,9 @@ const PageDesign = () => {
       </div>
 
       {/* Main design area */}
-      <div className="flex-1 flex flex-col">
+      <div className="relative flex-1 flex flex-col  ">
         <div className="p-4 border-b bg-white shadow-sm flex justify-between">
-          <h1 className="text-xl font-bold">3D Jute Bag Designer</h1>
+          <h1 className="text-xl font-bold">3D Table Designer</h1>
           <div className="">
             <button
               className="bg-blue-500 text-white py-2 px-4 rounded w-full"
@@ -426,11 +414,11 @@ const PageDesign = () => {
 
         <div className="relative flex-1 flex h-80 border-red">
           {/* 3D Design canvas */}
-          <div className="flex-1 pt-48 bg-transparent flex justify-center items-center ">
+          <div className="flex-1  bg-transparent flex pt-24  items-center justify-center">
             <div className="relative" style={{ perspective: "1200px" }}>
               <div
                 ref={cubeRef}
-                className="relative w-64 h-80 cube-container z-10"
+                className="relative w-64 h-80 cube-container"
                 style={{
                   transformStyle: "preserve-3d",
                   transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
@@ -441,13 +429,14 @@ const PageDesign = () => {
               >
                 {/* Front face */}
                 <div
-                  className="absolute w-48 h-80 border-2 border-gray-400"
+                  className="absolute w-108 h-8 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "front")?.color,
+                    // transform: "translateZ(14rem)",
                     transform: `translateY(${sides.find((s) => s.id === "front")?.up}rem) translateZ(${sides.find((s) => s.id === "front")?.forward}rem) translateX(${sides.find((s) => s.id === "front")?.right}rem)`,
                     width:`${sides.find((s) => s.id === "front")?.width}rem`,
                     height:`${sides.find((s) => s.id === "front")?.height}rem`,
-                    backfaceVisibility: "hidden",
+                    // backfaceVisibility: "hidden",
                   }}
                 >
                   {sides.find((s) => s.id === "front")?.image && (
@@ -463,13 +452,226 @@ const PageDesign = () => {
                     </span>
                   </div>
                 </div>
+{/* fl */}
+                <div
+                  className="absolute w-8 h-64 border-2 border-gray-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "fl")?.color,
+                    // transform: "translateZ(13.99rem) ",
+                    transform: `translateY(${sides.find((s) => s.id === "fl")?.up}rem) translateZ(${sides.find((s) => s.id === "fl")?.forward}rem) translateX(${sides.find((s) => s.id === "fl")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "fl")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "fl")?.height}rem`,
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "fl")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "fl")?.image?.url}
+                      alt="fl"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      fl
+                    </span>
+                  </div>
+                </div>
+{/* fr */}
+                <div
+                  className="absolute w-8 h-64 border-2 border-slate-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "fr")?.color,
+                    // transform: "translateZ(13.99rem) translatex(25rem)",
+                    transform: `translateY(${sides.find((s) => s.id === "fr")?.up}rem) translateZ(${sides.find((s) => s.id === "fr")?.forward}rem) translateX(${sides.find((s) => s.id === "fr")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "fr")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "fr")?.height}rem`,
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "fr")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "fr")?.image?.url}
+                      alt="fr"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      fr
+                    </span>
+                  </div>
+                </div>
+{/* br */}
+                <div
+                  className="absolute w-8 h-64 border-2 border-gray-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "br")?.color,
+                    // transform: "translateZ(0rem) rotateY(-180deg)",
+                    transform: `translateY(${sides.find((s) => s.id === "br")?.up}rem) translateZ(${sides.find((s) => s.id === "br")?.forward}rem) translateX(${sides.find((s) => s.id === "br")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "br")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "br")?.height}rem`,
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "br")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "br")?.image?.url}
+                      alt="br"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      br
+                    </span>
+                  </div>
+                </div>
+
+                {/*bl  */}
+                <div
+                  className="absolute w-8 h-64 border-2 border-slate-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "bl")?.color,
+                    // transform: "translatex(25rem) rotateY(-180deg)",
+                    transform: `translateY(${sides.find((s) => s.id === "bl")?.up}rem) translateZ(${sides.find((s) => s.id === "bl")?.forward}rem) translateX(${sides.find((s) => s.id === "bl")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "bl")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "bl")?.height}rem`,
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "bl")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "bl")?.image?.url}
+                      alt="bl"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      bl
+                    </span>
+                  </div>
+                </div>
+
+{/* ll */}
+                <div
+                  className="absolute w-4 h-64 border-2 border-gray-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "ll")?.color,
+                    // transform: "translateX(0rem) rotateY(-90deg)",
+                    // width: "2rem",
+                    transform: `rotateY(-90deg) translateY(${sides.find((s) => s.id === "ll")?.up}rem) translateZ(${sides.find((s) => s.id === "ll")?.forward}rem) translateX(${sides.find((s) => s.id === "ll")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "ll")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "ll")?.height}rem`,
+                    transformOrigin: "left center",
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "ll")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "ll")?.image?.url}
+                      alt="ll"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      ll
+                    </span>
+                  </div>
+                </div>
+{/* lr */}
+                <div
+                  className="absolute w-4 h-64 border-2 border-gray-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "lr")?.color,
+                    // transform: "translatez(12rem) rotateY(-90deg)",
+                    // width: "2rem",
+                    transform: `rotateY(-90deg) translateY(${sides.find((s) => s.id === "lr")?.up}rem) translateZ(${sides.find((s) => s.id === "lr")?.forward}rem) translateX(${sides.find((s) => s.id === "lr")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "lr")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "lr")?.height}rem`,
+                    transformOrigin: "left center",
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "lr")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "lr")?.image?.url}
+                      alt="lr"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      lr
+                    </span>
+                  </div>
+                </div>
+
+{/* rr */}
+                <div
+                  className="absolute w-4 h-64 border-2 border-slate-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "rr")?.color,
+                    // transform: "translateX(27rem) rotateY(-270deg) translateX(-2rem)",
+                    // width: "2rem",
+                    transform: ` rotateY(-270deg)  translateY(${sides.find((s) => s.id === "rr")?.up}rem) translateZ(${sides.find((s) => s.id === "rr")?.forward}rem) translateX(${sides.find((s) => s.id === "rr")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "rr")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "rr")?.height}rem`,
+                    transformOrigin: "left center",
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "rr")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "rr")?.image?.url}
+                      alt="rr"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      rr
+                    </span>
+                  </div>
+                </div>
+
+{/* rl */}
+                <div
+                  className="absolute w-4 h-64 border-2 border-slate-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "rl")?.color,
+                    // transform: "translateX(27rem) translateY(0rem) translateZ(14rem)  rotateY(-270deg)",
+                    // width: "2rem",
+                    transform: ` rotateY(-270deg)  translateY(${sides.find((s) => s.id === "rl")?.up}rem) translateZ(${sides.find((s) => s.id === "rl")?.forward}rem) translateX(${sides.find((s) => s.id === "rl")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "rl")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "rl")?.height}rem`,
+                    transformOrigin: "left center",
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "rl")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "rl")?.image?.url}
+                      alt="rl"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      rl
+                    </span>
+                  </div>
+                </div>
 
                 {/* Back face */}
                 <div
-                  className="absolute w-64 h-80 border-2 border-gray-400"
+                  className="absolute w-108 h-8 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "back")?.color,
-                    transform: `rotateY(180deg)  translateY(${sides.find((s) => s.id === "back")?.up}rem) translateZ(${sides.find((s) => s.id === "back")?.forward}rem) translateX(${sides.find((s) => s.id === "back")?.right}rem)`,
+                    // transform: "translateZ(-0rem) rotateY(180deg)",
+                    transform: `rotateY(180deg) translateY(${sides.find((s) => s.id === "back")?.up}rem) translateZ(${sides.find((s) => s.id === "back")?.forward}rem) translateX(${sides.find((s) => s.id === "back")?.right}rem)`,
                     width:`${sides.find((s) => s.id === "back")?.width}rem`,
                     height:`${sides.find((s) => s.id === "back")?.height}rem`,
                     // backfaceVisibility: "hidden",
@@ -491,11 +693,12 @@ const PageDesign = () => {
 
                 {/* Left face */}
                 <div
-                  className="absolute w-8 h-80 border-2 border-gray-400"
+                  className="absolute w-8 h-8 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "left")?.color,
                     // transform: "translateX(0rem) rotateY(-90deg)",
-                    transform: `rotateY(-90deg)  translateY(${sides.find((s) => s.id === "left")?.up}rem) translateZ(${sides.find((s) => s.id === "left")?.forward}rem) translateX(${sides.find((s) => s.id === "left")?.right}rem)`,
+                    // width: "14rem",
+                    transform: `rotateY(-90deg) translateY(${sides.find((s) => s.id === "left")?.up}rem) translateZ(${sides.find((s) => s.id === "left")?.forward}rem) translateX(${sides.find((s) => s.id === "left")?.right}rem)`,
                     width:`${sides.find((s) => s.id === "left")?.width}rem`,
                     height:`${sides.find((s) => s.id === "left")?.height}rem`,
                     transformOrigin: "left center",
@@ -518,11 +721,12 @@ const PageDesign = () => {
 
                 {/* Right face */}
                 <div
-                  className="absolute w-64 h-80 border-2 border-gray-400"
+                  className="absolute w-64 h-8 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "right")?.color,
-                    // transform: "translateX(8rem) rotateY(90deg)",
-                    transform: `rotateY(90deg)  translateY(${sides.find((s) => s.id === "right")?.up}rem) translateZ(${sides.find((s) => s.id === "right")?.forward}rem) translateX(${sides.find((s) => s.id === "right")?.right}rem)`,
+                    // transform: "translateX(13rem) rotateY(90deg)",
+                    // width: "14rem",
+                    transform: `rotateY(90deg) translateY(${sides.find((s) => s.id === "right")?.up}rem) translateZ(${sides.find((s) => s.id === "right")?.forward}rem) translateX(${sides.find((s) => s.id === "right")?.right}rem)`,
                     width:`${sides.find((s) => s.id === "right")?.width}rem`,
                     height:`${sides.find((s) => s.id === "right")?.height}rem`,
                     transformOrigin: "right center",
@@ -545,13 +749,11 @@ const PageDesign = () => {
 
                 {/* Top face */}
                 <div
-                  className="absolute w-64 h-32 border-2 border-gray-400"
+                  className="absolute w-108 h-108 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "top")?.color,
-                    // transform: "translateY(-0rem) rotateX(90deg)",
-                    transform: `rotateX(90deg) rotateZ(360deg)   translateY(${sides.find((s) => s.id === "top")?.up}rem) translateZ(${sides.find((s) => s.id === "top")?.forward}rem) translateX(${sides.find((s) => s.id === "top")?.right}rem)`,
-                    width:`${sides.find((s) => s.id === "top")?.width}rem`,
-                    height:`${sides.find((s) => s.id === "top")?.height}rem`,
+                    transform: "translateY(-0rem) rotateX(90deg)",
+                    height: "14rem",
                     transformOrigin: "center top",
                     // backfaceVisibility: "hidden",
                   }}
@@ -572,14 +774,12 @@ const PageDesign = () => {
 
                 {/* Bottom face */}
                 <div
-                  className="absolute w-64 h-32 border-2 border-gray-400"
+                  className="absolute w-108 h-32 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "bottom")
                       ?.color,
-                    // transform: "translateY(12rem) rotateX(-90deg)",
-                    transform: `rotateX(-90deg) rotateZ(-360deg)  translateY(${sides.find((s) => s.id === "bottom")?.up}rem) translateZ(${sides.find((s) => s.id === "bottom")?.forward}rem) translateX(${sides.find((s) => s.id === "bottom")?.right}rem)`,
-                    width:`${sides.find((s) => s.id === "bottom")?.width}rem`,
-                    height:`${sides.find((s) => s.id === "bottom")?.height}rem`,
+                    transform: "translateY(-12rem) rotateX(-90deg)",
+                    height: "14rem",
                     transformOrigin: "center bottom",
                     // backfaceVisibility: "hidden",
                   }}
@@ -598,17 +798,13 @@ const PageDesign = () => {
                   </div>
                 </div>
 
-                {/* top back */}
-                <div
+                {/* <div
                   className="absolute w-64 h-2 border-2 rounded-4xl"
                   style={{
-                    // transform:
-                    //   "rotateX(0deg) rotateY(180deg) translateZ(-0rem) translateY(-8.5rem) translateX(0rem)",
-                    // height: "9rem",
-                    // width: "16rem",
-                    transform: `rotateX(0deg) rotateY(180deg) rotateZ(360deg)   translateY(${sides.find((s) => s.id === "topback")?.up}rem) translateZ(${sides.find((s) => s.id === "topback")?.forward}rem) translateX(${sides.find((s) => s.id === "topback")?.right}rem)`,
-                    width:`${sides.find((s) => s.id === "topback")?.width}rem`,
-                    height:`${sides.find((s) => s.id === "topback")?.height}rem`,
+                    transform:
+                      "rotateX(0deg) rotateY(180deg) translateZ(-0rem) translateY(-8.5rem) translateX(0rem)",
+                    height: "9rem",
+                    width: "16rem",
                     borderTop: `0.4rem solid ${
                       sides.find((s) => s.id === "topback")?.color
                     }`,
@@ -640,17 +836,13 @@ const PageDesign = () => {
                   </div>
                 </div>
 
-                {/* top front     */}
                 <div
                   className="absolute w-64 h-2 border-2 rounded-4xl"
                   style={{
-                    // transform:
-                    //   "rotateX(0deg) rotateY(0deg) translateZ(8rem) translateY(-8.5rem) translateX(0rem)",
-                    // height: "9rem",
-                    // width: "16rem",
-                    transform: `rotateX(0deg) rotateY(360deg) rotateZ(360deg)   translateY(${sides.find((s) => s.id === "topfront")?.up}rem) translateZ(${sides.find((s) => s.id === "topfront")?.forward}rem) translateX(${sides.find((s) => s.id === "topfront")?.right}rem)`,
-                    width:`${sides.find((s) => s.id === "topfront")?.width}rem`,
-                    height:`${sides.find((s) => s.id === "topfront")?.height}rem`,
+                    transform:
+                      "rotateX(0deg) rotateY(0deg) translateZ(8rem) translateY(-8.5rem) translateX(0rem)",
+                    height: "9rem",
+                    width: "16rem",
                     borderTop: `0.4rem solid ${
                       sides.find((s) => s.id === "topfront")?.color
                     }`,
@@ -680,7 +872,7 @@ const PageDesign = () => {
                       Top Front
                     </span>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -723,13 +915,13 @@ const PageDesign = () => {
                 </button>
               </div>
               <div className="text-xs text-gray-500 text-center mt-2">
-                Pro Tip: Click and drag on the bag to rotate
+                Pro Tip: Click and drag on the table to rotate
               </div>
             </div>
 
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="font-medium">Bag Sides</h3>
+                <h3 className="font-medium">Table Sides</h3>
                 <button
                   className="bg-blue-500 text-white p-1 rounded flex items-center text-sm"
                   onClick={addNewSide}
@@ -762,6 +954,7 @@ const PageDesign = () => {
                       "bottom",
                       "topback",
                       "topfront",
+                      "fr", "fl","br", "bl","rr", "rl","lr", "ll"
                     ].includes(side.id) && (
                       <button
                         className="text-red-500 p-1"
@@ -775,6 +968,39 @@ const PageDesign = () => {
                     )}
                   </div>
                 ))}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="font-medium mb-2">Active Side Properties</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm mb-1">Color</label>
+                  <div className="flex">
+                    <input
+                      type="color"
+                      value={
+                        sides.find((s) => s.id === activeSide)?.color ||
+                        "#d4b895"
+                      }
+                      onChange={(e) =>
+                        changeSideColor(activeSide, e.target.value)
+                      }
+                      className="w-10 h-10 cursor-pointer border rounded"
+                    />
+                    <input
+                      type="text"
+                      value={
+                        sides.find((s) => s.id === activeSide)?.color ||
+                        "#d4b895"
+                      }
+                      onChange={(e) =>
+                        changeSideColor(activeSide, e.target.value)
+                      }
+                      className="flex-1 ml-2 border rounded px-2"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -859,39 +1085,6 @@ const PageDesign = () => {
               </div>
             </div>
 
-            <div className="mb-6">
-              <h3 className="font-medium mb-2">Active Side Properties</h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm mb-1">Color</label>
-                  <div className="flex">
-                    <input
-                      type="color"
-                      value={
-                        sides.find((s) => s.id === activeSide)?.color ||
-                        "#d4b895"
-                      }
-                      onChange={(e) =>
-                        changeSideColor(activeSide, e.target.value)
-                      }
-                      className="w-10 h-10 cursor-pointer border rounded"
-                    />
-                    <input
-                      type="text"
-                      value={
-                        sides.find((s) => s.id === activeSide)?.color ||
-                        "#d4b895"
-                      }
-                      onChange={(e) =>
-                        changeSideColor(activeSide, e.target.value)
-                      }
-                      className="flex-1 ml-2 border rounded px-2"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
             
 
             <div className="mb-6">
@@ -926,11 +1119,8 @@ const PageDesign = () => {
           </div>
         </div>
       </div>
-
-      
-
     </div>
   );
 };
 
-export default PageDesign;
+export default Table3d;

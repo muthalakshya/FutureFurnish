@@ -8,6 +8,7 @@ export const ShopContext = createContext();
 
 const ShopContextProvider = (props)=>{
 
+    const [save3d, setSave3d] = useState(false);
     const currency = '$';
     const delivery_fee = 10;
     const backendUrl = import.meta.env.VITE_BACKEND_URL
@@ -22,8 +23,30 @@ const ShopContextProvider = (props)=>{
     const [userType, setUserType] = useState("");
     const [totalOrders , setTotalOrders] = useState(0)
     const [orderTotalValues, setOrderTotalValues] = useState(0)
+    const [userContextData, setUserContextData] = useState(null);
 
     const toggleCart = () => setCartOpen(!isCartOpen);
+
+    useEffect(() => {
+        const fetchUserContextData = async () => {
+          try {
+            const response = await axios.get(`${backendUrl}/api/user/user-profile`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+    
+            if (response.data.success) {
+              setUserContextData(response.data.user);
+              console.log(response.data.user.email);
+            } else {
+              console.error(response.data.message);
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        };
+    
+        if (token) fetchUserContextData();
+      }, [token, backendUrl]);
 
 
     const addToCart = async (itemId, size) => {
@@ -126,9 +149,10 @@ const ShopContextProvider = (props)=>{
         getProductData()
     },[])
 
-    // useEffect(() => {
-    //     localStorage.setItem("userTypeData", userType);
-    //   }, [token, userType]);
+    useEffect(() => {
+        localStorage.setItem("save3d", save3d);
+        console.log(localStorage.getItem("save3d"))
+      }, [setSave3d]);
 
     useEffect (()=>{
         if (!token && localStorage.getItem('token') ) {
@@ -166,7 +190,9 @@ const ShopContextProvider = (props)=>{
         registrationType, setRegistrationType,
         userType, setUserType,
         totalOrders , setTotalOrders,
-        orderTotalValues, setOrderTotalValues
+        orderTotalValues, setOrderTotalValues,
+        save3d, setSave3d,
+        userContextData, setUserContextData
     }
     return (
         <ShopContext.Provider value={value}>

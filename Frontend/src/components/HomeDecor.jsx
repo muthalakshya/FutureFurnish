@@ -35,7 +35,7 @@ import imgcart34 from "../assets/imgcart34.jpg";
 import imgcart35 from "../assets/imgcart35.jpg";
 import imgcart36 from "../assets/imgcart36.jpg";
 
-import {products} from "../assets copy/assets"
+import {products} from "../assets/data"
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -187,8 +187,22 @@ export default function HomeDecor() {
 
 
             <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-6 gap-y-8">
+            {/* {
+                id: 'frntrchc1',
+                type: 'couch',
+                name: 'Single Couch',
+                description: 'Sofa kecil untuk satu orang yang sangat cocok untuk santai serambi membaca buku atau menyeduh teh hangat',
+                currency: 'Rp',
+                price: 1599000,
+                img_link: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=958&q=80',
+              }, */}
+
+              {/* {products.map((img, index) => (
+                <Cards id={img.id} imgProd={products[index].image} productId={index} name={products[index].name} price={products[index].price} description={products[index].description} sizes={products[index].sizes} />
+              ))} */}
               {products.map((img, index) => (
-                <Cards imgProd={products[index].image} productId={index} name={products[index].name} price={products[index].price} description={products[index].description} sizes={products[index].sizes} />
+                // console.log(img.img_link)
+                <Cards id={img.id} imgProd={img.img_link} productId={img.id} name={img.name} price={img.price} description={img.description} sizes={img.sizes} />
               ))}
             </div>
           </div>

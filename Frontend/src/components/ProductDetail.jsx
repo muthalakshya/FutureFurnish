@@ -73,11 +73,11 @@ const ProductDetail = () => {
           <button 
             onClick={() => {
               if (size) {
-                addToCart(productData._id, size); 
+                addToCart(productData.id, size); 
               } else {
                 toast.error("Select Product Size")
               }
-              console.log(size)
+              console.log(productData.id, size)
             }} 
             className='bg-black text-white px-8 py-3 text-sm active:bg-orange-700'
           >

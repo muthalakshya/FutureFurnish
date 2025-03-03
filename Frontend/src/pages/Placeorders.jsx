@@ -63,8 +63,10 @@ const Placeorders = () => {
 
       for(const items in cartItems) {
         for(const item in cartItems[items]){
+          // console.log(item)
           if (cartItems[items][item] > 0 ) {
-            const itemInfo = structuredClone(products.find(product => product._id === items))
+            const itemInfo = structuredClone(products.find(product => product.id === items))
+            // console.log(itemInfo)
               if(itemInfo) {
                 itemInfo.size = item
                 itemInfo.quantity = cartItems[items][item]

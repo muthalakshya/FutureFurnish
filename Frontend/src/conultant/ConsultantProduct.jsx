@@ -138,7 +138,7 @@ const ConsultantProduct = () => {
             <div key={index} className='border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow'>
               <div className='aspect-square overflow-hidden bg-gray-100'>
                 <img 
-                  src={item.imageUrl || (item.image && item.image[0]) || 'https://miraaf.com/assets/images/no_order1.png'} 
+                  src={item.imageUrl || (item.image && item.image[0]) || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=958&q=80'} 
                   alt={item.title || item.name} 
                   className='w-full h-full object-cover' 
                   onError={(e) => {e.target.src = 'https://miraaf.com/assets/images/no_order1.png'}}

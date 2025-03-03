@@ -7,36 +7,8 @@ import { toast } from 'react-toastify'
 const IndustryOrders = () => {
   const {backendUrl,token,currency, totalOrders , setTotalOrders, orderTotalValues, setOrderTotalValues} = useContext(ShopContext)
   const  [orderData, setOrderData] = useState([])
-  
 
-//   const loadOrderData = async ()=>{
-//     try {
-//       if(!token){
-//         return null
-//       }
-//       const response = await axios.post(backendUrl+'/api/order/list',{},{headers:{token}})
-//       // console.log(response.data)
-//       if(response.data.success){
-//         let allOrdersItem = []
-//         response.data.orders.map((order)=>{
-//           order.items.map((item)=>{
-//             item['status'] = order.status
-//             item['payment'] = order.payment
-//             item['paymentMethod']  = order.paymentMethod
-//             item['date']  = order.date
-//             allOrdersItem.push(item)
-//           })
-//         })
-//         console.log(allOrdersItem)
-//         setOrderData(allOrdersItem.reverse())
-//       }
-//     } catch (error) {
-//       console.log(error)
-//       toast.error(error.message)
-//     }
-//   }
-
-const loadOrderData = async () => {
+  const loadOrderData = async () => {
     try {
       if (!token) return;
   
@@ -111,7 +83,7 @@ const loadOrderData = async () => {
               return (
                 <div key={index} className='py-4 border-t border-b  text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4 '>
                   <div className='flex items-start gap-6 text-sm '>
-                    <img src={item.image[0]} className='w-16 sm:w-20' />
+                    <img src={item.img_link} className='w-16 sm:w-20' />
                     <div>
                       <p className='font-medium sm:text-base'>{item.name}</p>
                       <div className='flex items-center gap-3 mt-1 text-base text-gray-700'>

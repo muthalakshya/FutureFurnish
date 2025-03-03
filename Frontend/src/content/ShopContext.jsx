@@ -2,14 +2,14 @@ import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import {toast } from 'react-toastify';
-import { products as pd} from "../assets copy/assets"
+import { products as pd} from "../assets/data"
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props)=>{
 
     const [save3d, setSave3d] = useState(false);
-    const currency = '$';
+    const currency = '₹';
     const delivery_fee = 10;
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const [search, setSearch] = useState('');
@@ -50,7 +50,8 @@ const ShopContextProvider = (props)=>{
 
 
     const addToCart = async (itemId, size) => {
-        let cartData = structuredClone(cartItems);  // Clone the cartItems
+        let cartData = structuredClone(cartItems); 
+        console.log(cartData) // Clone the cartItems
         if (cartData[itemId]) {
             if (cartData[itemId][size]) {
                 cartData[itemId][size] += 1;  // Increment quantity if size already exists
@@ -106,7 +107,7 @@ const ShopContextProvider = (props)=>{
     const getCartAmount = ()=>{
         let totalAmount = 0
         for(const items in cartItems){
-            let itemInfo = products.find((product)=> product._id === items);
+            let itemInfo = products.find((product)=> product.id === items);
             for(const item in cartItems[items]){
                 try {
                     if (cartItems[items][item] > 0) {
@@ -151,16 +152,16 @@ const ShopContextProvider = (props)=>{
 
     useEffect(() => {
         localStorage.setItem("save3d", save3d);
-        console.log(localStorage.getItem("save3d"))
+        // console.log(localStorage.getItem("save3d"))
       }, [setSave3d]);
 
     useEffect (()=>{
         if (!token && localStorage.getItem('token') ) {
             setToken(localStorage.getItem('token'))
             getUserCart(localStorage.getItem('token'))
-            console.log(userType)
+            // console.log(userType)
             setUserType(localStorage.getItem("userTypeData"))
-            console.log(userType)
+            // console.log(userType)
         }
     },[])
     useEffect(() => {

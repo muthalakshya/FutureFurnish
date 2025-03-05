@@ -30,17 +30,6 @@ const ModelViewer = () => {
       }
       const response = await axios.post(backendUrl+'/api/user3d/fetch-jute-bags',{email:userContextData.email})
       console.log(response.data.juteBags[0].sides)
-      if(response.data.success){
-        // let allOrdersItem = []
-        // response.data.orders.map((order)=>{
-        //   order.items.map((item)=>{
-        //     item['status'] = order.status
-        //     allOrdersItem.push(item)
-        //   })
-        // })
-        // console.log(allOrdersItem)
-        // setOrderData(allOrdersItem.reverse())
-      }
     } catch (error) {
       console.log(error)
       toast.error(error.message)

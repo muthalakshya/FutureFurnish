@@ -25,6 +25,11 @@ const Navbar = () => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("predictionData");
+    localStorage.removeItem("totalValue");
+    localStorage.removeItem("totalOrders");
+    localStorage.removeItem("save3d");
+    localStorage.removeItem("windowRef");
     localStorage.removeItem("userTypeData");
     setToken("");
     setUserType("");

@@ -36,8 +36,11 @@ import DesignList from './conultant/DesignList';
 import Demo from './pages/Demo';
 import PageDesign from './conultant/PageDesign';
 import ModelViewer from './conultant/ModelViewer';
+import ShowModel from './conultant/ShowModel';
+import ShowTableModel from './conultant/ShowTableModel';
 import Table3d from './conultant/Table3d';
 import ConsultantProduct from './conultant/ConsultantProduct';
+import ProdDetail from './components/ProdDetail';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -71,6 +74,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/home-decor/:productId' element={<ProductDetail />} />
+        <Route path='/home-decor/a/:pd' element={<ProdDetail />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/login' element={<Login />} />
         <Route path="/consultant-registration" element={<ConsultantRegistration />} />
@@ -91,7 +95,9 @@ function App() {
         <Route path="/order-history" element={<OrderHistory />} />
         <Route path='/place-order' element={<Placeorder />} />
         <Route path='/industry-order' element={<IndustryOrders />} />
-        <Route path="/viewer" element={<ModelViewer />} />
+        {/* <Route path="/viewer" element={<ModelViewer />} /> */}
+        <Route path="/viewer" element={<ShowModel />} />
+        <Route path="/viewer-table" element={<ShowTableModel />} />
         <Route path='/consultant-product' element={<ConsultantProduct />} />
 
         {/* Protected Routes */}

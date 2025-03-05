@@ -95,38 +95,49 @@ const PageDesign = () => {
       if (resp.data.success) {
         const userId = resp.data.user._id;
         const email = resp.data.user.email;
-        
         const payload = { userId, email, sides };
-  
-        const response = await fetch(`${backendUrl}/api/user3d/add-jute-bag`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(payload),
-        });
-  
-        const data = await response.json();
-  
-        if (response.ok) {
-          toast.success("Jute Bag stored successfully!");
-          
-          // Use localStorage to communicate with parent window
-          localStorage.setItem("save3d", "true");
-          
-          // Try to notify parent window directly if possible
-          if (window.opener && !window.opener.closed) {
-            window.opener.postMessage({ type: "DESIGN_SAVED", success: true }, "*");
-          }
-          
-          // Close this window after a brief delay
-          setTimeout(() => {
-            window.close();
-          }, 1000);
-        } else {
-          toast.error(`Failed to store Jute Bag: ${data.error}`);
+        localStorage.setItem("save3d", "true");
+        localStorage.setItem("save3dJutedata", JSON.stringify(payload));
+
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage({ type: "DESIGN_SAVED", success: true }, "*");
         }
+        
+        // Close this window after a brief delay
+        setTimeout(() => {
+          window.close();
+        }, 1000);
+  
+        // const response = await fetch(`${backendUrl}/api/user3d/add-jute-bag`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     "Authorization": `Bearer ${token}`
+        //   },
+        //   body: JSON.stringify(payload),
+        // });
+  
+        // const data = await response.json();
+  
+        // if (response.ok) {
+        //   toast.success("Jute Bag stored successfully!");
+          
+        //   // Use localStorage to communicate with parent window
+        //   localStorage.setItem("save3d", "true");
+        //   localStorage.setItem("save3dJutedata", JSON.stringify(payload));
+          
+        //   // Try to notify parent window directly if possible
+        //   if (window.opener && !window.opener.closed) {
+        //     window.opener.postMessage({ type: "DESIGN_SAVED", success: true }, "*");
+        //   }
+          
+        //   // Close this window after a brief delay
+        //   setTimeout(() => {
+        //     window.close();
+        //   }, 1000);
+        // } else {
+        //   toast.error(`Failed to store Jute Bag: ${data.error}`);
+        // }
       } else {
         console.error(resp.data.message);
         toast.error("Failed to verify user profile.");
@@ -204,17 +215,39 @@ const PageDesign = () => {
     }
   }, [activeSide]);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
-
-    const newImages = files.map((file) => ({
-      id: Date.now() + Math.random().toString(36).substr(2, 9),
-      name: file.name,
-      url: URL.createObjectURL(file),
-    }));
-
-    setImages([...images, ...newImages]);
+  
+    // Convert Blob/File to Base64
+    const convertBlobToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => resolve(reader.result); // Get Base64 string
+        reader.onerror = (error) => reject(error);
+      });
+    };
+  
+    try {
+      // Convert all images to base64
+      const newImages = await Promise.all(
+        files.map(async (file) => ({
+          id: Date.now() + Math.random().toString(36).substr(2, 9),
+          name: file.name,
+          base64: await convertBlobToBase64(file), // Await the base64 conversion
+          url: URL.createObjectURL(file), // Temporary URL for preview
+        }))
+      );
+  
+      // Update state
+      setImages((prevImages) => [...prevImages, ...newImages]);
+  
+      console.log("Uploaded Images:", newImages);
+    } catch (error) {
+      console.error("Error converting images:", error);
+    }
   };
+  
 
   const removeImage = (id) => {
     setImages(images.filter((img) => img.id !== id));

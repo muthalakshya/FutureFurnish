@@ -17,8 +17,8 @@ const Table3d = () => {
     { id: "back", name: "Back Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"0"   },
     { id: "left", name: "Left Side", color: "#d4b895", image: null , width:"14",height:"2", up:"0",right:"0", forward:"0"   },
     { id: "right", name: "Right Side", color: "#d4b895", image: null , width:"14",height:"2", up:"0",right:"0", forward:"13"   },
-    { id: "top", name: "Top Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
-    { id: "bottom", name: "Bottom Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+    { id: "top", name: "Top Side", color: "#d4b895", image: null , width:"27",height:"14", up:"0",right:"0", forward:"0"   },
+    { id: "bottom", name: "Bottom Side", color: "#d4b895", image: null , width:"27",height:"14", up:"0",right:"0", forward:"0"   },
     { id: "topfront", name: "Top Front Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
     { id: "topback", name: "Top Back Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
     { id: "fr", name: "Front off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"25", forward:"13.9"   },
@@ -51,42 +51,51 @@ const Table3d = () => {
       const resp = await axios.get(`${backendUrl}/api/user/user-profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+
       if (resp.data.success) {
         const userId = resp.data.user._id;
         const email = resp.data.user.email;
-        
         const payload = { userId, email, sides };
-  
-        const response = await fetch(`${backendUrl}/api/user3d/add-table`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify(payload),
-        });
-  
-        const data = await response.json();
-  
-        if (response.ok) {
-          toast.success("Table stored successfully!");
-          
-          // Use localStorage to communicate with parent window
-          localStorage.setItem("save3d", "true");
-          
-          // Try to notify parent window directly if possible
-          if (window.opener && !window.opener.closed) {
-            window.opener.postMessage({ type: "DESIGN_SAVED", success: true }, "*");
-          }
-          
-          // Close this window after a brief delay
-          setTimeout(() => {
-            window.close();
-          }, 1000);
-        } else {
-          toast.error(`Failed to store Table: ${data.error}`);
+        localStorage.setItem("save3d", "true");
+        localStorage.setItem("save3dTabledata", JSON.stringify(payload));
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage({ type: "DESIGN_SAVED", success: true }, "*");
         }
+        
+        // Close this window after a brief delay
+        setTimeout(() => {
+          window.close();
+        }, 1000);
+
+        // const response = await fetch(`${backendUrl}/api/user3d/add-table`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     "Authorization": `Bearer ${token}`
+        //   },
+        //   body: JSON.stringify(payload),
+        // });
+
+        // const data = await response.json();
+
+        // if (response.ok) {
+        //   toast.success("Table stored successfully!");
+
+        //   // Use localStorage to communicate with parent window
+        //   localStorage.setItem("save3d", "true");
+          
+        //   // Try to notify parent window directly if possible
+        //   if (window.opener && !window.opener.closed) {
+        //     window.opener.postMessage({ type: "DESIGN_SAVED", success: true }, "*");
+        //   }
+          
+        //   // Close this window after a brief delay
+        //   setTimeout(() => {
+        //     window.close();
+        //   }, 1000);
+        // } else {
+        //   toast.error(`Failed to store Table: ${data.error}`);
+        // }
       } else {
         console.error(resp.data.message);
         toast.error("Failed to verify user profile.");
@@ -189,16 +198,44 @@ const Table3d = () => {
     }
   }, [activeSide]);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
 
-    const newImages = files.map((file) => ({
-      id: Date.now() + Math.random().toString(36).substr(2, 9),
-      name: file.name,
-      url: URL.createObjectURL(file),
-    }));
+    const convertBlobToBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => resolve(reader.result); // Get Base64 string
+        reader.onerror = (error) => reject(error);
+      });
+    };
 
-    setImages([...images, ...newImages]);
+    try {
+      // Convert all images to base64
+      const newImages = await Promise.all(
+        files.map(async (file) => ({
+          id: Date.now() + Math.random().toString(36).substr(2, 9),
+          name: file.name,
+          base64: await convertBlobToBase64(file), // Await the base64 conversion
+          url: URL.createObjectURL(file), // Temporary URL for preview
+        }))
+      );
+  
+      // Update state
+      setImages((prevImages) => [...prevImages, ...newImages]);
+  
+      console.log("Uploaded Images:", newImages);
+    } catch (error) {
+      console.error("Error converting images:", error);
+    }
+
+    // const newImages = files.map((file) => ({
+    //   id: Date.now() + Math.random().toString(36).substr(2, 9),
+    //   name: file.name,
+    //   url: URL.createObjectURL(file),
+    // }));
+
+    // setImages([...images, ...newImages]);
   };
 
   const removeImage = (id) => {
@@ -752,8 +789,9 @@ const Table3d = () => {
                   className="absolute w-108 h-108 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "top")?.color,
-                    transform: "translateY(-0rem) rotateX(90deg)",
-                    height: "14rem",
+                    transform: `translateY(-0rem) rotateX(90deg) translateY(${sides.find((s) => s.id === "top")?.up}rem) translateZ(${sides.find((s) => s.id === "top")?.forward}rem) translateX(${sides.find((s) => s.id === "top")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "top")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "top")?.height}rem`,
                     transformOrigin: "center top",
                     // backfaceVisibility: "hidden",
                   }}
@@ -778,8 +816,9 @@ const Table3d = () => {
                   style={{
                     backgroundColor: sides.find((s) => s.id === "bottom")
                       ?.color,
-                    transform: "translateY(-12rem) rotateX(-90deg)",
-                    height: "14rem",
+                    transform: `translateY(-12rem) rotateX(-90deg) translateY(${sides.find((s) => s.id === "bottom")?.up}rem) translateZ(${sides.find((s) => s.id === "bottom")?.forward}rem) translateX(${sides.find((s) => s.id === "bottom")?.right}rem)`,
+                    width:`${sides.find((s) => s.id === "bottom")?.width}rem`,
+                    height:`${sides.find((s) => s.id === "bottom")?.height}rem`,
                     transformOrigin: "center bottom",
                     // backfaceVisibility: "hidden",
                   }}

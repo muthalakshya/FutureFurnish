@@ -13,7 +13,9 @@ const ProductSubmission = () => {
   const { token, backendUrl, save3d, setSave3d, userContextData, setUserContextData } = useContext(ShopContext);
   const [selectedImage, setSelectedImage] = useState(null);
   const [designSubmitted, setDesignSubmitted] = useState(false);
+  const [base64Image, setBase64Image] = useState(null);
   const fileInputRef = useRef(null);
+  const [images, setImages] = useState(null);
   
   // Form data state
   const [productData, setProductData] = useState({
@@ -41,6 +43,7 @@ const ProductSubmission = () => {
   
   // Preview state
   const [showPreview, setShowPreview] = useState(false);
+  const [pld, setPld] = useState(null);
   
   // Calculate profit and margin when price or cost changes
   const calculateProfitAndMargin = (price, cost) => {
@@ -95,26 +98,179 @@ const ProductSubmission = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+    console.log(JSON.parse(localStorage.getItem("save3dJutedata")))
     // Validate form
     if (!productData.title || !productData.price) {
       alert('Please fill in all required fields (Title and Price)');
       return;
     }
+    if(localStorage.getItem(`save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`)){
+      const payload = JSON.parse(localStorage.getItem(`save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`))
+      setPld(payload.sides)
+      console.log(payload)
+      console.log(pld)
+    }
     
     // Log the product data to console
-    console.log('Form submitted with product data:', productData);
+    // console.log('Form submitted with product data:', productData);
     
     // Show preview
     setShowPreview(true);
   };
+  // Handle final submission
+// const handleFinalSubmit = async () => {
   
-  // Handle final submission
-  // Handle final submission
+//   try {
+//     // console.log("userContextData.email",userContextData.email)
+//     if(localStorage.getItem(`save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`)){
+//       const payload = JSON.parse(localStorage.getItem(`save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`))
+//       setPld(payload.sides)
+//       console.log(payload)
+//       console.log(pld)
+//     }
+//     const formattedData = {
+//       ...productData,
+      
+//       // Convert string number values to actual numbers
+//       price: parseFloat(productData.price) || 0,
+//       compareAtPrice: parseFloat(productData.compareAtPrice) || 0,
+//       costPerItem: parseFloat(productData.costPerItem) || 0,
+//       weight: parseFloat(productData.weight) || 0,
+//       emailId:userContextData.email,
+//       quantity: parseInt(productData.quantity) || 0,
+//       dimensions: {
+//         height: parseFloat(productData.height) || 0,
+//         breadth: parseFloat(productData.breadth) || 0,
+//         length: parseFloat(productData.length) || 0
+//       },
+//       // Add image URL if available
+//       imageUrl:  images || null,
+//       sides: pld
+
+//     };
+    
+//     // Make API call to save product
+//     const response = await fetch(`${backendUrl}/api/product3model/createProduct`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//       },
+//       body: JSON.stringify(formattedData)
+//     });
+
+//     const result = await response.json();
+//     console.log(result);
+//     if (!response.ok) {
+//       return toast.error(result.message || 'Failed to save product');
+//     }
+
+//     if(selectedImage==null){
+//       try {
+//         const payload = JSON.parse(localStorage.getItem(`save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`))
+//         const response = await fetch(`${backendUrl}/api/user3d/add-${productType === 'jute_bag' ? 'jute-bag' : 'table'}`, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             "Authorization": `Bearer ${token}`
+//           },
+//           body: JSON.stringify(payload),
+//         });
+  
+//         const data = await response.json();
+  
+//         if (response.ok) {
+//           // toast.success(`${productType === 'jute_bag' ? 'Jute Bag' : 'Table'} stored successfully!`);
+//           localStorage.removeItem(`save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`);
+//         } else {
+//           toast.error(`Failed to store Jute Bag: ${data.error}`);
+//         }
+//       } catch (error) {
+//         console.error(`Error storing ${productType === 'jute_bag' ? 'Jute Bag' : 'Table'}:`, error);
+//         toast.error("Something went wrong while storing Jute Bag.");
+//       }
+//     }
+
+    
+    
+//     // Show success message
+//     toast.success(`Your ${productType === 'jute_bag' ? 'Jute Bag' : 'Table'} has been successfully submitted!`);
+    
+//     // Reset form
+//     setShowPreview(false);
+//     setShowTypeSelector(true);
+//     setProductType('');
+//     setProductData({
+//       title: '',
+//       description: '',
+//       price: '0.00',
+//       compareAtPrice: '0.00',
+//       costPerItem: '0.00',
+//       profit: '—',
+//       margin: '—',
+//       chargeTax: true,
+//       trackQuantity: true,
+//       continueWhenOutOfStock: false,
+//       hasSKU: false,
+//       isPhysical: true,
+//       weight: '0.0',
+//       quantity: '0',
+//       category: '',
+//       status: 'Active',
+//       type: '',
+//       vendor: '',
+//       collections: '',
+//       tags: '', 
+//       height: "", 
+//       breadth: "", 
+//       length: ""
+//     });
+    
+//     // Clear image selection
+//     setSelectedImage(null);
+//     setImages(null)
+//     if (fileInputRef.current) {
+//       fileInputRef.current.value = "";
+//     }
+    
+//     // Reset 3D design state
+//     setDesignSubmitted(false);
+//     setSave3d(false);
+//     localStorage.removeItem("save3d");
+//     navigate("/consultant-dashboard")
+//   } catch (error) {
+//     console.error('Error submitting product:', error);
+//     alert(`Error: ${error.message || 'Failed to submit product. Please try again.'}`);
+//   }
+// };
 const handleFinalSubmit = async () => {
   try {
-    // Format product data for the API
-    console.log("userContextData.email",userContextData.email)
+    // Prepare sides data
+    let sidesData = null;
+    
+    // Check localStorage for saved 3D data
+    const localStorageKey = `save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`;
+    const savedLocalData = localStorage.getItem(localStorageKey);
+
+    // Try to get sides from localStorage or pld
+    if (savedLocalData) {
+      try {
+        const payload = JSON.parse(savedLocalData);
+        
+        // Check if sides exist and are a non-empty array
+        if (payload.sides && Array.isArray(payload.sides) && payload.sides.length > 0) {
+          sidesData = payload.sides;
+        }
+      } catch (parseError) {
+        console.error('Error parsing localStorage data:', parseError);
+      }
+    }
+
+    // If no sides from localStorage, check pld
+    if (!sidesData && pld && Array.isArray(pld) && pld.length > 0) {
+      sidesData = pld;
+    }
+
     const formattedData = {
       ...productData,
       
@@ -123,17 +279,20 @@ const handleFinalSubmit = async () => {
       compareAtPrice: parseFloat(productData.compareAtPrice) || 0,
       costPerItem: parseFloat(productData.costPerItem) || 0,
       weight: parseFloat(productData.weight) || 0,
-      emailId:userContextData.email,
+      emailId: userContextData.email,
       quantity: parseInt(productData.quantity) || 0,
       dimensions: {
         height: parseFloat(productData.height) || 0,
         breadth: parseFloat(productData.breadth) || 0,
         length: parseFloat(productData.length) || 0
       },
-      // Add image URL if available
-      imageUrl: selectedImage || null
+      // Only add imageUrl or sides if they exist
+      ...(images ? { imageUrl: images } : {}),
+      ...(sidesData ? { sides: sidesData } : {})
     };
     
+    console.log("Formatted Data for Submission:", formattedData);
+
     // Make API call to save product
     const response = await fetch(`${backendUrl}/api/product3model/createProduct`, {
       method: 'POST',
@@ -143,17 +302,43 @@ const handleFinalSubmit = async () => {
       },
       body: JSON.stringify(formattedData)
     });
-    
+
     const result = await response.json();
-    
+    console.log("API Response:", result);
+
     if (!response.ok) {
       return toast.error(result.message || 'Failed to save product');
     }
+
+    if(savedLocalData){
+      try {
+        const payload = JSON.parse(localStorage.getItem(`save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`))
+        const response = await fetch(`${backendUrl}/api/user3d/add-${productType === 'jute_bag' ? 'jute-bag' : 'table'}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(payload),
+        });
+      
+        const data = await response.json();
+      
+        if (response.ok) {
+          // toast.success(`${productType === 'jute_bag' ? 'Jute Bag' : 'Table'} stored successfully!`);
+          localStorage.removeItem(`save3d${productType === 'jute_bag' ? 'Jute' : 'Table'}data`);
+        } else {
+          toast.error(`Failed to store Jute Bag: ${data.error}`);
+        }
+      } catch (error) {
+        console.error(`Error storing ${productType === 'jute_bag' ? 'Jute Bag' : 'Table'}:`, error);
+        toast.error("Something went wrong while storing Jute Bag.");
+      }
+    }
+
+        toast.success(`Your ${productType === 'jute_bag' ? 'Jute Bag' : 'Table'} has been successfully submitted!`);
     
-    // Show success message
-    toast.success(`Your ${productType === 'jute_bag' ? 'Jute Bag' : 'Table'} has been successfully submitted!`);
-    
-    // Reset form
+//     // Reset form
     setShowPreview(false);
     setShowTypeSelector(true);
     setProductType('');
@@ -185,6 +370,7 @@ const handleFinalSubmit = async () => {
     
     // Clear image selection
     setSelectedImage(null);
+    setImages(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -193,6 +379,10 @@ const handleFinalSubmit = async () => {
     setDesignSubmitted(false);
     setSave3d(false);
     localStorage.removeItem("save3d");
+    navigate("/consultant-dashboard")
+
+
+    // Rest of the submission logic remains the same...
   } catch (error) {
     console.error('Error submitting product:', error);
     alert(`Error: ${error.message || 'Failed to submit product. Please try again.'}`);
@@ -201,8 +391,8 @@ const handleFinalSubmit = async () => {
   
   // Component for product type selection
   const TypeSelector = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-8 max-w-md w-full">
+    <div className="fixed mt-16  inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
         <h2 className="text-2xl font-bold mb-6 text-center">Select Product Type</h2>
         <div className="grid grid-cols-2 gap-4">
           <button
@@ -286,19 +476,49 @@ const handleFinalSubmit = async () => {
     </div>
   );
 
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setSelectedImage(URL.createObjectURL(file));
-      setDesignSubmitted(false);
-      setSave3d(false);
-      localStorage.removeItem("save3d");
+      // setSelectedImage(URL.createObjectURL(file));
+      // console.log(URL.createObjectURL(file))
+      // setDesignSubmitted(false);
+      // setSave3d(false);
+      // localStorage.removeItem("save3d");
+      const convertBlobToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onloadend = () => resolve(reader.result); // Get Base64 string
+          reader.onerror = (error) => reject(error);
+        });
+      };
+    
+      try {
+        // Convert all images to base64
+        const newImages = {
+            base64: await convertBlobToBase64(file), // Await the base64 conversion
+            url: URL.createObjectURL(file), // Temporary URL for preview
+          }
+        
+    
+        // Update state
+        setImages(newImages.base64);
+        setSelectedImage(newImages.url);
+        setDesignSubmitted(false);
+        setSave3d(false);
+        localStorage.removeItem("save3d");
+    
+        console.log("Uploaded Images:", newImages);
+      } catch (error) {
+        console.error("Error converting images:", error);
+      }
     }
   };
   
   // Function to clear the selected image
   const clearSelectedImage = () => {
     setSelectedImage(null);
+    setImages(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }

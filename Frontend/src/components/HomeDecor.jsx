@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -19,23 +19,10 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 import Cards from "./Cards";
-
-// Importing images
-import imgcart24 from "../assets/imgcart24.jpg";
-import imgcart25 from "../assets/imgcart25.jpg";
-import imgcart26 from "../assets/imgcart26.jpg";
-import imgcart27 from "../assets/imgcart27.jpg";
-import imgcart28 from "../assets/imgcart28.jpg";
-import imgcart29 from "../assets/imgcart29.jpg";
-import imgcart30 from "../assets/imgcart30.jpg";
-import imgcart31 from "../assets/imgcart31.jpg";
-import imgcart32 from "../assets/imgcart32.jpg";
-import imgcart33 from "../assets/imgcart33.jpg";
-import imgcart34 from "../assets/imgcart34.jpg";
-import imgcart35 from "../assets/imgcart35.jpg";
-import imgcart36 from "../assets/imgcart36.jpg";
-
 import {products} from "../assets/data"
+import axios from "axios";
+import { ShopContext } from "../content/ShopContext";
+import ProductCards from "./ProductCards";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -65,7 +52,102 @@ const filters = [
 
 export default function HomeDecor() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  console.log(products[0]._id)
+  // console.log(products[0]._id)
+  const { backendUrl, token, currency, setTotalOrders, setOrderTotalValues,userContextData } = useContext(ShopContext)
+  const [productData, setProductData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [email, setEmail] = useState('')
+
+  const loadProductData = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      if (!token) {
+        setLoading(false)
+        return
+      }
+      const response = await axios.get(`${backendUrl}/api/product3model/getAllProducts`)
+      // console.log(response.data)
+      if (response.data.success) {
+        // Process the data correctly based on API response structure
+        let allProducts = []
+        // console.log(response.data)
+        
+        response.data.data.forEach((prod) => {
+          // If the product has individual items, flatten them into the list
+          if (Array.isArray(prod.items) && prod.items.length > 0) {
+            prod.items.forEach((item) => {
+              allProducts.push({
+                ...item,
+                productId: prod._id || prod.id,
+                title: prod.title,
+                description: prod.description,
+                price: prod.price,
+                profit: prod.profit,
+                quantity: prod.quantity || 1,
+                status: prod.status || 'Available',
+                type: prod.type,
+                vendor: prod.vendor,
+                weight: prod.weight,
+                imageUrl: prod.imageUrl || (item.image && item.image[0]),
+                height: prod.dimensions?.height || null,
+                breadth: prod.dimensions?.breadth || null,
+                length: prod.dimensions?.length || null,
+                sides:prod.sides
+              })
+            })
+          } else {
+            // If the product doesn't have items, add the product itself
+            allProducts.push({
+              productId: prod._id || prod.id,
+              title: prod.title,
+              description: prod.description,
+              price: prod.price,
+              profit: prod.profit,
+              quantity: prod.quantity || 1,
+              status: prod.status || 'Available',
+              type: prod.type,
+              vendor: prod.vendor,
+              weight: prod.weight,
+              imageUrl: prod.imageUrl,
+              image: prod.image || [prod.imageUrl],
+              height: prod.dimensions?.height || null,
+              breadth: prod.dimensions?.breadth || null,
+              length: prod.dimensions?.length || null,
+              sides:prod.sides
+            })
+          }
+        })
+
+        setProductData(allProducts)
+        
+        // Update order totals if needed
+        if (typeof setTotalOrders === 'function') {
+          setTotalOrders(allProducts.length)
+          localStorage.setItem("totalOrders", allProducts.length)
+        }
+        // Calculate and set total value if needed
+        if (typeof setOrderTotalValues === 'function') {
+          const totalValue = allProducts.reduce((sum, item) => 
+            sum + (parseFloat(item.price) * (item.quantity || 1)), 0)
+          setOrderTotalValues(totalValue)
+          localStorage.setItem("totalValue", totalValue)
+        }
+      } else {
+        setError('Failed to load products: ' + (response.data.message || 'Unknown error'))
+      }
+    } catch (error) {
+      console.error('Error loading products:', error)
+      setError(error.message || 'Failed to load products')
+      toast.error(error.message || 'Failed to load products')
+    }
+  }
+
+  useEffect(() => {
+    loadProductData()
+  }, [token])
+
   return (
     <div className="bg-[#f1f9eb] pt-16" >
       {/* Mobile Filter Dialog */}
@@ -187,22 +269,16 @@ export default function HomeDecor() {
 
 
             <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-6 gap-y-8">
-            {/* {
-                id: 'frntrchc1',
-                type: 'couch',
-                name: 'Single Couch',
-                description: 'Sofa kecil untuk satu orang yang sangat cocok untuk santai serambi membaca buku atau menyeduh teh hangat',
-                currency: 'Rp',
-                price: 1599000,
-                img_link: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=958&q=80',
-              }, */}
 
-              {/* {products.map((img, index) => (
-                <Cards id={img.id} imgProd={products[index].image} productId={index} name={products[index].name} price={products[index].price} description={products[index].description} sizes={products[index].sizes} />
-              ))} */}
+{/* dimensions{height: 22, breadth: 22, length: 12}  */}
+
+              {productData.map((img, index) => (
+                // console.log(img)
+                <ProductCards x3sides={img.sides} category={img.category} compareAtPrice={img.compareAtPrice} weight={img.weight} id={img.productId} imgProd={img.imageUrl} productId={img.productId} name={img.name} price={img.price} description={img.description} sizes={img.dimensions} />
+              ))}
               {products.map((img, index) => (
                 // console.log(img.img_link)
-                <Cards id={img.id} imgProd={img.img_link} productId={img.id} name={img.name} price={img.price} description={img.description} sizes={img.sizes} />
+                <Cards index={img.id} imgProd={img.img_link} productId={img.id} name={img.title} price={img.price} description={img.description} sizes={img.sizes} />
               ))}
             </div>
           </div>

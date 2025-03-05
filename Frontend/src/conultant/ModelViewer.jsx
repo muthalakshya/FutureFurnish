@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { ArrowLeft, Download, Save, RotateCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import domtoimage from "dom-to-image";
+import { ShopContext } from "../content/ShopContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const ModelViewer = () => {
   const [modelData, setModelData] = useState(null);
@@ -14,9 +17,36 @@ const ModelViewer = () => {
   const cubeRef = useRef(null);
   const containerRef = useRef(null);
   const viewerRef = useRef(null);
+  const {backendUrl,token,currency,userContextData} = useContext(ShopContext)
+  const  [orderData, setOrderData] = useState([])
 
   // Constants for movement constraints
   const BOUNDARY_SIZE = 250;
+
+  const getSlides = async ()=>{
+    try {
+      if(!token){
+        return null
+      }
+      const response = await axios.post(backendUrl+'/api/user3d/fetch-jute-bags',{email:userContextData.email})
+      console.log(response.data.juteBags[0].sides)
+      if(response.data.success){
+        // let allOrdersItem = []
+        // response.data.orders.map((order)=>{
+        //   order.items.map((item)=>{
+        //     item['status'] = order.status
+        //     allOrdersItem.push(item)
+        //   })
+        // })
+        // console.log(allOrdersItem)
+        // setOrderData(allOrdersItem.reverse())
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+  getSlides()
 
   useEffect(() => {
     // Load model data from localStorage

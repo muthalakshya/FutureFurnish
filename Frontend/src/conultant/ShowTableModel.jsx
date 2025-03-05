@@ -15,50 +15,26 @@ const ShowModel = ({d3sides}) => {
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [sides, setSides] = useState(d3sides);
+//   const [sides, setSides] = useState(d3sides);
+  const [sides, setSides] = useState( [{ id: "front", name: "Front Side", color: "#d4b895", image: null, width:"27",height:"2", up:"0",right:"0", forward:"14"  },
+  { id: "back", name: "Back Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"0"   },
+  { id: "left", name: "Left Side", color: "#d4b895", image: null , width:"14",height:"2", up:"0",right:"0", forward:"0"   },
+  { id: "right", name: "Right Side", color: "#d4b895", image: null , width:"14",height:"2", up:"0",right:"0", forward:"13"   },
+  { id: "top", name: "Top Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+  { id: "bottom", name: "Bottom Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+  { id: "topfront", name: "Top Front Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+  { id: "topback", name: "Top Back Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
+  { id: "fr", name: "Front off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"25", forward:"13.9"   },
+  { id: "br", name: "Back off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"0", forward:"0"   },
+  { id: "rr", name: "Right off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"-2", forward:"27"   },
+  { id: "lr", name: "Left off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"12", forward:"0"   },
+  { id: "fl", name: "Front off Left Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"0", forward:"13.9"   },
+  { id: "bl", name: "Back off Left Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"25", forward:"0"   },
+  { id: "rl", name: "Right off Left Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"-14", forward:"27"   },
+  { id: "ll", name: "Left off Left Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"0", forward:"0"   },
+]);
   const {backendUrl,token,userContextData} = useContext(ShopContext)
   const [eml, setEml] = useState("");
-  // console.log(sides)
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await axios.get(`${backendUrl}/api/user/user-profile`, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       });
-
-  //       if (response.data.success) {
-  //         setEml(response.data.user.email);
-  //         console.log(eml);
-  //       } else {
-  //         console.error(response.data.message);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //     }
-  //   };
-  //   if (token) fetchUserData();
-  // }, [token, backendUrl]);
-
-  // useEffect(()=>{
-  //   const getSlides = async ()=>{
-  //     try {
-  //       if(!token){
-  //         return null
-  //       }
-  //       const response = await axios.post(backendUrl+'/api/user3d/fetch-jute-bags',{email:eml})
-  //       console.log(response.data.juteBags[1].sides)
-  //       if(response.data.success){
-  //         console.log("first")
-  //         setSides(response.data.juteBags[2].sides)
-  //         console.log(sides,"cc")
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //       toast.error(error.message)
-  //     }
-  //   }
-  //   getSlides()
-  // },[eml])
 
     const [activeSide, setActiveSide] = useState("front");
   const fileInputRef = useRef(null);
@@ -116,9 +92,9 @@ const ShowModel = ({d3sides}) => {
           <h1 className="text-xl font-bold">3D Jute Bag Designer</h1>
         </div> */}
 
-        <div className="relative flex-1 flex  border-red ">
+        <div className="relative flex-1 flex  border-red pl-6">
           {/* 3D Design canvas */}
-          <div className="flex-1  bg-transparent flex px-24 pt-24 justify-center">
+          <div className="flex-1  bg-transparent flex px-24 pt-24 justify-center items-center">
             <div className="relative" style={{ perspective: "1800px" }}>
               <div
                 ref={cubeRef}
@@ -137,9 +113,9 @@ const ShowModel = ({d3sides}) => {
                   className="absolute w-48 h-80 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "front")?.color,
-                    transform: `translateY(${0}rem) translateZ(${5}rem) translateX(0rem)`,
-                    width:`6rem`,
-                    height:`8rem`,
+                    transform: `translateY(${0}rem) translateZ(${6}rem) translateX(0rem)`,
+                    width:`8rem`,
+                    height:`1rem`,
                     backfaceVisibility: "hidden",
                   }}
                 >
@@ -162,9 +138,9 @@ const ShowModel = ({d3sides}) => {
                   className="absolute w-64 h-80 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "back")?.color,
-                    transform: `rotateY(180deg)  translateY(${0}rem) translateZ(${-2}rem) translateX(${0}rem)`,
-                    width:`6rem`,
-                    height:`8rem`,
+                    transform: `rotateY(180deg)  translateY(${0}rem) translateZ(${0}rem) translateX(${0}rem)`,
+                    width:`8rem`,
+                    height:`1rem`,
                     // backfaceVisibility: "hidden",
                   }}
                 >
@@ -188,9 +164,9 @@ const ShowModel = ({d3sides}) => {
                   style={{
                     backgroundColor: sides.find((s) => s.id === "left")?.color,
                     // transform: "translateX(0rem) rotateY(-90deg)",
-                    transform: `rotateY(-90deg)  translateY(${0}rem) translateZ(${0}rem) translateX(${2}rem)`,
-                    width:`3rem`,
-                    height:`8rem`,
+                    transform: `rotateY(-90deg)  translateY(${0}rem) translateZ(${0}rem) translateX(${0}rem)`,
+                    width:`6rem`,
+                    height:`1rem`,
                     transformOrigin: "left center",
                     // backfaceVisibility: "hidden",
                   }}
@@ -214,10 +190,10 @@ const ShowModel = ({d3sides}) => {
                   className="absolute w-64 h-80 border-2 border-gray-400"
                   style={{
                     backgroundColor: sides.find((s) => s.id === "right")?.color,
-                    // transform: "translateX(8rem) rotateY(90deg)",
-                    transform: `rotateY(90deg)  translateY(${0}rem) translateZ(${3}rem) translateX(${-2}rem)`,
-                    width:`3rem`,
-                    height:`8rem`,
+                    // transform: "translateX(1rem) rotateY(90deg)",
+                    transform: `rotateY(90deg)  translateY(${0}rem) translateZ(${2}rem) translateX(${0}rem)`,
+                    width:`6rem`,
+                    height:`1rem`,
                     transformOrigin: "right center",
                     // backfaceVisibility: "hidden",
                   }}
@@ -242,9 +218,9 @@ const ShowModel = ({d3sides}) => {
                   style={{
                     backgroundColor: sides.find((s) => s.id === "top")?.color,
                     // transform: "translateY(-0rem) rotateX(90deg)",
-                    transform: `rotateX(90deg) rotateZ(360deg)   translateY(${2}rem) translateZ(${0}rem) translateX(${0}rem)`,
-                    width:`6rem`,
-                    height:`3rem`,
+                    transform: `rotateX(90deg) rotateZ(360deg)   translateY(0rem) translateZ(0rem) translateX(0rem)`,
+                    width:`4rem`,
+                    height:`6rem`,
                     transformOrigin: "center top",
                     // backfaceVisibility: "hidden",
                   }}
@@ -270,9 +246,9 @@ const ShowModel = ({d3sides}) => {
                     backgroundColor: sides.find((s) => s.id === "bottom")
                       ?.color,
                     // transform: "translateY(12rem) rotateX(-90deg)",
-                    transform: `rotateX(-90deg) rotateZ(-360deg)  translateY(-2rem) translateZ(${5}rem) translateX(0rem)`,
-                    width:`6rem`,
-                    height:`3rem`,
+                    transform: `rotateX(-90deg) rotateZ(-360deg)  translateY(0rem) translateZ(-5rem) translateX(0rem)`,
+                    width:`4rem`,
+                    height:`6rem`,
                     transformOrigin: "center bottom",
                     // backfaceVisibility: "hidden",
                   }}
@@ -285,94 +261,220 @@ const ShowModel = ({d3sides}) => {
                     />
                   )}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  </div>
+                </div>
+
+{/* fl */}
+<div
+                  className="absolute w-8 h-64 border-2 border-gray-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "fl")?.color,
+                    // transform: "translateZ(13.99rem) ",
+                    transform: `translateY(${0}rem) translateZ(${5.99}rem) translateX(${0}rem)`,
+                    width:`1rem`,
+                    height:`4rem`,
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "fl")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "fl")?.image?.url}
+                      alt="fl"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      fl
+                    </span>
+                  </div> */}
+                </div>
+{/* fr */}
+                <div
+                  className="absolute w-8 h-64 border-2 border-slate-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "fr")?.color,
+                    // transform: "translateZ(13.99rem) translatex(25rem)",
+                    transform: `translateY(0rem) translateZ(5.99rem) translateX(7rem)`,
+                    width:`1rem`,
+                    height:`4rem`,
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "fr")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "fr")?.image?.url}
+                      alt="fr"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      fr
+                    </span>
+                  </div> */}
+                </div>
+{/* br */}
+                <div
+                  className="absolute w-8 h-64 border-2 border-gray-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "br")?.color,
+                    // transform: "translateZ(0rem) rotateY(-180deg)",
+                    transform: `translateY(0rem) translateZ(0rem) translateX(0rem)`,
+                    width:`1rem`,
+                    height:`4rem`,
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "br")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "br")?.image?.url}
+                      alt="br"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     {/* <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                      Bottom
+                      br
                     </span> */}
                   </div>
                 </div>
 
-                {/* top back */}
+                {/*bl  */}
                 <div
-                  className="absolute w-64 h-2 border-2 rounded-4xl"
+                  className="absolute w-8 h-64 border-2 border-slate-400"
                   style={{
-                    // transform:
-                    //   "rotateX(0deg) rotateY(180deg) translateZ(-0rem) translateY(-8.5rem) translateX(0rem)",
-                    // height: "9rem",
-                    // width: "16rem",
-                    transform: `rotateX(0deg) rotateY(180deg) rotateZ(360deg)   translateY(-3.6rem) translateZ(-2rem) translateX(0rem)`,
-                    width:`6rem`,
+                    backgroundColor: sides.find((s) => s.id === "bl")?.color,
+                    // transform: "translatex(25rem) rotateY(-180deg)",
+                    transform: `translateY(0rem) translateZ(0rem) translateX(7rem)`,
+                    width:`1rem`,
                     height:`4rem`,
-                    borderTop: `0.4rem solid ${
-                      sides.find((s) => s.id === "topback")?.color
-                    }`,
-                    borderLeft: `0.4rem solid ${
-                      sides.find((s) => s.id === "topback")?.color
-                    }`,
-                    borderRight: `0.4rem solid ${
-                      sides.find((s) => s.id === "topback")?.color
-                    }`,
-                    borderBottom: `0.4rem solid transparent`,
-                    transformOrigin: "center top",
-                    borderRadius: "50% 50% 50% 0 / 100% 100% 0 0",
-                    perspective: "800px",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+                    // backfaceVisibility: "hidden",
                   }}
                 >
-                  {/* {sides.find((s) => s.id === "topback")?.image && (
+                  {sides.find((s) => s.id === "bl")?.image && (
                     <img
-                      src={sides.find((s) => s.id === "topback")?.image?.url}
-                      alt="topback"
-                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply rounded-t-full"
-                      style={{ borderRadius: "50% 50% 50% 0 / 100% 100% 0 0" }}
+                      src={sides.find((s) => s.id === "bl")?.image?.url}
+                      alt="bl"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
                     />
-                  )} */}
+                  )}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     {/* <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                      Top Back
+                      bl
                     </span> */}
                   </div>
                 </div>
 
-                {/* top front     */}
+{/* ll */}
                 <div
-                  className="absolute w-64 h-2 border-2 rounded-4xl"
+                  className="absolute w-4 h-64 border-2 border-gray-400"
                   style={{
-                    // transform:
-                    //   "rotateX(0deg) rotateY(0deg) translateZ(8rem) translateY(-8.5rem) translateX(0rem)",
-                    // height: "9rem",
-                    // width: "16rem",
-                    transform: `rotateX(0deg) rotateY(360deg) rotateZ(360deg)   translateY(-3.6rem) translateZ(5rem) translateX(0rem)`,
-                    width:`6rem`,
+                    backgroundColor: sides.find((s) => s.id === "ll")?.color,
+                    // transform: "translateX(0rem) rotateY(-90deg)",
+                    // width: "2rem",
+                    transform: `rotateY(-90deg) translateY(0rem) translateZ(0rem) translateX(0rem)`,
+                    width:`1rem`,
                     height:`4rem`,
-                    borderTop: `0.4rem solid ${
-                      sides.find((s) => s.id === "topfront")?.color
-                    }`,
-                    borderLeft: `0.4rem solid ${
-                      sides.find((s) => s.id === "topfront")?.color
-                    }`,
-                    borderRight: `0.4rem solid ${
-                      sides.find((s) => s.id === "topfront")?.color
-                    }`,
-                    borderBottom: `0.4rem solid transparent`,
-                    transformOrigin: "center top",
-                    borderRadius: "50% 50% 50% 0 / 100% 100% 0 0",
-                    perspective: "800px",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+                    transformOrigin: "left center",
+                    // backfaceVisibility: "hidden",
                   }}
                 >
-                  {/* {sides.find((s) => s.id === "topfront")?.image && (
+                  {sides.find((s) => s.id === "ll")?.image && (
                     <img
-                      src={sides.find((s) => s.id === "topfront")?.image?.url}
-                      alt="topfront"
-                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply rounded-t-full"
-                      style={{ borderRadius: "50% 50% 50% 0 / 100% 100% 0 0" }}
+                      src={sides.find((s) => s.id === "ll")?.image?.url}
+                      alt="ll"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
                     />
-                  )} */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    {/* <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                      Top Front
-                    </span> */}
-                  </div>
+                  )}
+                  {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      ll
+                    </span>
+                  </div> */}
+                </div>
+{/* lr */}
+                <div
+                  className="absolute w-4 h-64 border-2 border-gray-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "lr")?.color,
+                    // transform: "translatez(12rem) rotateY(-90deg)",
+                    // width: "2rem",
+                    transform: `rotateY(-90deg) translateY(0rem) translateZ(-0.01rem) translateX(4.99rem)`,
+                    width:`1rem`,
+                    height:`4rem`,
+                    transformOrigin: "left center",
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "lr")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "lr")?.image?.url}
+                      alt="lr"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      lr
+                    </span>
+                  </div> */}
+                </div>
+
+{/* rr */}
+                <div
+                  className="absolute w-4 h-64 border-2 border-slate-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "rr")?.color,
+                    // transform: "translateX(27rem) rotateY(-270deg) translateX(-2rem)",
+                    // width: "2rem",
+                    transform: ` rotateY(-270deg)  translateY(0rem) translateZ(8rem) translateX(-1rem)`,
+                    width:`1rem`,
+                    height:`4rem`,
+                    transformOrigin: "left center",
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "rr")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "rr")?.image?.url}
+                      alt="rr"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      rr
+                    </span>
+                  </div> */}
+                </div>
+
+{/* rl */}
+                <div
+                  className="absolute w-4 h-64 border-2 border-slate-400"
+                  style={{
+                    backgroundColor: sides.find((s) => s.id === "rl")?.color,
+                    // transform: "translateX(27rem) translateY(0rem) translateZ(14rem)  rotateY(-270deg)",
+                    // width: "2rem",
+                    transform: ` rotateY(-270deg)  translateY(0rem) translateZ(8rem) translateX(-6rem)`,
+                    width:`1rem`,
+                    height:`4rem`,
+                    transformOrigin: "left center",
+                    // backfaceVisibility: "hidden",
+                  }}
+                >
+                  {sides.find((s) => s.id === "rl")?.image && (
+                    <img
+                      src={sides.find((s) => s.id === "rl")?.image?.url}
+                      alt="rl"
+                      className="absolute inset-0 w-full h-full object-cover mix-blend-multiply"
+                    />
+                  )}
+                  {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      rl
+                    </span>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -389,9 +491,6 @@ const ShowModel = ({d3sides}) => {
 };
 
 export default ShowModel;
-
-
-// import React, { useState, useRef, useEffect, useContext } from "react";
 // import { X, Upload, RotateCcw, Plus, Trash2 } from "lucide-react";
 // import { useNavigate } from 'react-router-dom';
 // import modelData from "../assets/3D_Model.json";
@@ -628,7 +727,7 @@ export default ShowModel;
 //                   className="absolute w-64 h-80 border-2 border-gray-400"
 //                   style={{
 //                     backgroundColor: sides.find((s) => s.id === "right")?.color,
-//                     // transform: "translateX(8rem) rotateY(90deg)",
+//                     // transform: "translateX(1rem) rotateY(90deg)",
 //                     transform: `rotateY(90deg)  translateY(${sides.find((s) => s.id === "right")?.up}rem) translateZ(${sides.find((s) => s.id === "right")?.forward}rem) translateX(${sides.find((s) => s.id === "right")?.right}rem)`,
 //                     width:`${sides.find((s) => s.id === "right")?.width}rem`,
 //                     height:`${sides.find((s) => s.id === "right")?.height}rem`,
@@ -752,7 +851,7 @@ export default ShowModel;
 //                   className="absolute w-64 h-2 border-2 rounded-4xl"
 //                   style={{
 //                     // transform:
-//                     //   "rotateX(0deg) rotateY(0deg) translateZ(8rem) translateY(-8.5rem) translateX(0rem)",
+//                     //   "rotateX(0deg) rotateY(0deg) translateZ(1rem) translateY(-8.5rem) translateX(0rem)",
 //                     // height: "9rem",
 //                     // width: "16rem",
 //                     transform: `rotateX(0deg) rotateY(360deg) rotateZ(360deg)   translateY(${sides.find((s) => s.id === "topfront")?.up}rem) translateZ(${sides.find((s) => s.id === "topfront")?.forward}rem) translateX(${sides.find((s) => s.id === "topfront")?.right}rem)`,

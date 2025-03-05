@@ -1,6 +1,6 @@
 import express from 'express'
 
-import {deleteProduct, updateProduct, getProductById, createProduct, getAllProducts} from '../controllers/productUpload3dController.js';
+import { createProduct, getAllProducts, getProductById} from '../controllers/productUpload3dController.js';
 // const auth = require('../middleware/auth');
 
 
@@ -12,6 +12,7 @@ product3dUploadRouter.post('/createProduct',  createProduct);
 product3dUploadRouter.get('/getAllProducts', getAllProducts);
 
 // Get a single product by ID
+product3dUploadRouter.post('/getProductById', getProductById);
 // product3dUploadRouter.get('/:id', getProductById);
 
 // Update a product

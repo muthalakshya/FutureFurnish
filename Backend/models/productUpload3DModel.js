@@ -1,5 +1,17 @@
 import mongoose from 'mongoose'
 
+const sideSchema = new mongoose.Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  color: { type: String, default: "#d4b895" },
+  image: { type: String, default: null }, // Store image URL or Base64
+  width: { type: String, required: true }, // Keeping it as string since your values are in quotes
+  height: { type: String, required: true },
+  up: { type: String, required: true },
+  right: { type: String, required: true },
+  forward: { type: String, required: true },
+});
+
 const ProductUpload3dSch = new mongoose.Schema({
   title: {
     type: String,
@@ -55,6 +67,7 @@ const ProductUpload3dSch = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  sides: { type: [sideSchema], required: false },
   weight: {
     type: Number,
     default: 0

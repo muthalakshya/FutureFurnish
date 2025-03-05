@@ -3,12 +3,36 @@ import { ShopContext } from '../content/ShopContext'
 import Title from '../components/Title'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import ShowModel from './ShowModel'
 
 const ConsultantProduct = () => {
-  const { backendUrl, token, currency, setTotalOrders, setOrderTotalValues } = useContext(ShopContext)
+  const { backendUrl, token, currency, setTotalOrders, setOrderTotalValues,userContextData } = useContext(ShopContext)
   const [productData, setProductData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [email, setEmail] = useState('')
+
+  // useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/user/user-profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.data.success) {
+          setEmail(response.data.user.email);
+          // console.log(email)
+        } else {
+          console.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    // if (token) fetchUserData();
+  // }, [token,backendUrl]);
+  fetchUserData()
 
   const loadProductData = async () => {
     setLoading(true)
@@ -19,12 +43,13 @@ const ConsultantProduct = () => {
         setLoading(false)
         return
       }
-
-      const response = await axios.get(`${backendUrl}/api/product3model/getAllProducts`)
-
+      
+      const response = await axios.post(`${backendUrl}/api/product3model/getProductById`,{email})
+      console.log(response.data)
       if (response.data.success) {
         // Process the data correctly based on API response structure
         let allProducts = []
+        console.log(response.data)
         
         response.data.data.forEach((prod) => {
           // If the product has individual items, flatten them into the list
@@ -65,7 +90,9 @@ const ConsultantProduct = () => {
               image: prod.image || [prod.imageUrl],
               height: prod.dimensions?.height || null,
               breadth: prod.dimensions?.breadth || null,
-              length: prod.dimensions?.length || null
+              length: prod.dimensions?.length || null,
+              sides:prod.sides
+
             })
           }
         })
@@ -99,7 +126,7 @@ const ConsultantProduct = () => {
 
   useEffect(() => {
     loadProductData()
-  }, [token])
+  }, [email])
 
   return (
     <div className='border-t pt-10 px-4 md:px-12 lg:px-24 mb-8'>
@@ -137,12 +164,22 @@ const ConsultantProduct = () => {
           {productData.map((item, index) => (
             <div key={index} className='border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow'>
               <div className='aspect-square overflow-hidden bg-gray-100'>
-                <img 
-                  src={item.imageUrl || (item.image && item.image[0]) || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=958&q=80'} 
+                {
+                  item.imageUrl || (item.image && item.image[0])?
+                  <img 
+                  src={item.imageUrl || (item.image && item.image[0]) } 
                   alt={item.title || item.name} 
                   className='w-full h-full object-cover' 
                   onError={(e) => {e.target.src = 'https://miraaf.com/assets/images/no_order1.png'}}
                 />
+                  :<ShowModel d3sides={item.sides} />
+                }
+                {/* <img 
+                  src={item.imageUrl || (item.image && item.image[0]) || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=958&q=80'} 
+                  alt={item.title || item.name} 
+                  className='w-full h-full object-cover' 
+                  onError={(e) => {e.target.src = 'https://miraaf.com/assets/images/no_order1.png'}}
+                /> */}
               </div>
               
               <div className='p-4'>

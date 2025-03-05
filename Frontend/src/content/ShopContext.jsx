@@ -193,7 +193,7 @@ const ShopContextProvider = (props)=>{
         totalOrders , setTotalOrders,
         orderTotalValues, setOrderTotalValues,
         save3d, setSave3d,
-        userContextData, setUserContextData
+        userContextData, setUserContextData,
     }
     return (
         <ShopContext.Provider value={value}>

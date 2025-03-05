@@ -16,8 +16,10 @@ const port = process.env.PORT || 4000;
 connectDB()
 connectCloudinary()
 
-app.use(express.json())
+// app.use(express.json())
 app.use(cors())
+app.use(express.json({ limit: "500mb" })); // Default is 100kb, increase to 50MB
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 app.use('/api/user',userRouter)
 app.use('/api/product',productRouter)

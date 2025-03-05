@@ -24,6 +24,8 @@ import {
 } from "recharts";
 import { ShopContext } from "../content/ShopContext";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 

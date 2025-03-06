@@ -763,12 +763,12 @@ const PageDesign = () => {
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-medium">Bag Sides</h3>
-                <button
+                {/* <button
                   className="bg-blue-500 text-white p-1 rounded flex items-center text-sm"
                   onClick={addNewSide}
                 >
                   <Plus size={16} />
-                </button>
+                </button> */}
               </div>
               <div className="space-y-2 max-h-48 overflow-y-auto mb-4">
                 {sides.map((side) => (
@@ -815,7 +815,7 @@ const PageDesign = () => {
               <h3 className="font-medium mb-2">Size Properties</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm mb-1">Front & Back Size</label>
+                  {/* <label className="block text-sm mb-1">Front & Back Size</label> */}
                   <div className="flex">
                     <p>Width</p>
                     <input

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { ShopContext } from "../content/ShopContext";
 import { assets } from "../assets copy/assets"; // Star icons
 import ShowModel from "../conultant/ShowModel"; // Assume you have this component
+import ShowTableModel from "../conultant/ShowTableModel";
 
 const ProdDetail = () => {
   const { pd } = useParams();
@@ -42,7 +43,9 @@ const ProdDetail = () => {
               price: prod.price,
               imageUrl: prod.imageUrl || (item.image && item.image[0]),
               sizes: prod.sizes || ['S', 'M', 'L'],
-              fullProductData: prod
+              type: prod.type,
+              fullProductData: prod,
+              sides:prod.sides
             }));
           }
           
@@ -51,7 +54,9 @@ const ProdDetail = () => {
             productId: prod._id || prod.id,
             imageUrl: prod.imageUrl || (prod.image && prod.image[0]),
             sizes: prod.sizes || ['S', 'M', 'L'],
-            fullProductData: prod
+            type: prod.type,
+            fullProductData: prod,
+            sides:prod.sides
           }];
         });
 
@@ -59,6 +64,7 @@ const ProdDetail = () => {
         console.log(foundProduct,"dff")
         if (foundProduct) {
           setProduct(foundProduct);
+          console.log(foundProduct,"dffss")
         } else {
           setError("Product not found");
           toast.error("Product not found");
@@ -102,9 +108,11 @@ const ProdDetail = () => {
                 alt={product.title} 
                 className="w-full h-auto object-cover"
               />
-            ) : (
-              <ShowModel d3sides={product.sides}/>
-            )}
+            ) : product.type === "table" ? ( // ✅ Use `===` for strict comparison
+            <ShowTableModel d3sides={product.sides} />
+          ) : (
+            <ShowModel d3sides={product.sides} />
+          )}
           </div>
           <div>
             <h1 className="text-2xl font-bold mb-4">{product.title || 'Single Couch'}</h1>

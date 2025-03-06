@@ -274,7 +274,7 @@ export default function HomeDecor() {
 
               {productData.map((img, index) => (
                 // console.log(img)
-                <ProductCards x3sides={img.sides} category={img.category} compareAtPrice={img.compareAtPrice} weight={img.weight} id={img.productId} imgProd={img.imageUrl} productId={img.productId} name={img.name} price={img.price} description={img.description} sizes={img.dimensions} />
+                <ProductCards x3sides={img.sides} type={img.type} compareAtPrice={img.compareAtPrice} weight={img.weight} id={img.productId} imgProd={img.imageUrl} productId={img.productId} name={img.name} price={img.price} description={img.description} sizes={img.dimensions} />
               ))}
               {products.map((img, index) => (
                 // console.log(img.img_link)

@@ -713,7 +713,7 @@ const handleFinalSubmit = async () => {
                     </div>
                   ) : null}
 
-                  <div className="flex justify-center mb-2">
+                  <div className="sm:flex justify-center mb-2">
                     <input
                       type="file"
                       onChange={handleFileUpload}

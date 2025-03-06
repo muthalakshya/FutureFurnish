@@ -19,8 +19,6 @@ const Table3d = () => {
     { id: "right", name: "Right Side", color: "#d4b895", image: null , width:"14",height:"2", up:"0",right:"0", forward:"13"   },
     { id: "top", name: "Top Side", color: "#d4b895", image: null , width:"27",height:"14", up:"0",right:"0", forward:"0"   },
     { id: "bottom", name: "Bottom Side", color: "#d4b895", image: null , width:"27",height:"14", up:"0",right:"0", forward:"0"   },
-    { id: "topfront", name: "Top Front Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
-    { id: "topback", name: "Top Back Side", color: "#d4b895", image: null , width:"27",height:"2", up:"0",right:"0", forward:"14"   },
     { id: "fr", name: "Front off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"25", forward:"13.9"   },
     { id: "br", name: "Back off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"0", forward:"0"   },
     { id: "rr", name: "Right off Right Side", color: "#d4b895", image: null , width:"2",height:"15", up:"0",right:"-2", forward:"27"   },
@@ -184,13 +182,6 @@ const Table3d = () => {
         case "bottom":
           setRotation({ x: 90, y: 0 });
           break;
-        case "topfront":
-          setRotation({ x: -45, y: 0 });
-          break;
-        case "topback":
-          setRotation({ x: -45, y: 180 });
-          break;
-        
         default:
           // For custom sides, don't change the rotation
           break;
@@ -336,8 +327,6 @@ const Table3d = () => {
         "right",
         "top",
         "bottom",
-        "topback",
-        "topfront",
         "fr", "fl","br", "bl","rr", "rl","lr", "ll",
       ].includes(sideId)
     )
@@ -961,12 +950,12 @@ const Table3d = () => {
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-medium">Table Sides</h3>
-                <button
+                {/* <button
                   className="bg-blue-500 text-white p-1 rounded flex items-center text-sm"
                   onClick={addNewSide}
                 >
                   <Plus size={16} />
-                </button>
+                </button> */}
               </div>
               <div className="space-y-2 max-h-48 overflow-y-auto mb-4">
                 {sides.map((side) => (
@@ -991,8 +980,6 @@ const Table3d = () => {
                       "right",
                       "top",
                       "bottom",
-                      "topback",
-                      "topfront",
                       "fr", "fl","br", "bl","rr", "rl","lr", "ll"
                     ].includes(side.id) && (
                       <button
@@ -1047,7 +1034,7 @@ const Table3d = () => {
               <h3 className="font-medium mb-2">Size Properties</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm mb-1">Front & Back Size</label>
+                  {/* <label className="block text-sm mb-1">Front & Back Size</label> */}
                   <div className="flex">
                     <p>Width</p>
                     <input

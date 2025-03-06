@@ -46,7 +46,7 @@ const Orders = () => {
         <div className='text-2xl'>
           <Title text1={'MY'} text2={'ORDERS'} />
         </div>
-        <div>
+        <div> 
           {
             orderData.length==0?
             <div className='text-2xl text-center pb-24'>

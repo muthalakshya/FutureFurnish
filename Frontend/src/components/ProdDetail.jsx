@@ -61,10 +61,10 @@ const ProdDetail = () => {
         });
 
         const foundProduct = allProducts.find(product => product.productId === pd);
-        console.log(foundProduct,"dff")
+        // console.log(foundProduct,"dff")
         if (foundProduct) {
           setProduct(foundProduct);
-          console.log(foundProduct,"dffss")
+          // console.log(foundProduct,"dffss")
         } else {
           setError("Product not found");
           toast.error("Product not found");
@@ -84,7 +84,7 @@ const ProdDetail = () => {
 
   useEffect(() => {
     fetchProductDetails();
-    console.log(product,"uj")
+    // console.log(product,"uj")
   }, [pd, token, backendUrl]);
 
   // Render loading state
@@ -166,11 +166,13 @@ const ProdDetail = () => {
             {/* Add to Cart Button */}
             <button 
               onClick={() => {
-                if (!size) {
-                  toast.error("Select Product Size");
-                  return;
+                if (size) {
+                  addToCart(product.productId, size,product); 
+                  // console.log(product)
+                } else {
+                  toast.error("Select Product Size")
                 }
-                addToCart(product.productId, size);
+                // console.log(product.productId, size)
               }}
               className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
             >

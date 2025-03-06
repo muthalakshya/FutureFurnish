@@ -7,15 +7,45 @@ import { ShopContext } from "../content/ShopContext";
 
 export default function IndustryUpdateStatus() {
   const [orders, setOrders] = useState([]);
-  const {backendUrl,token,currency} = useContext(ShopContext)
+  const [loading, setLoading] = useState(true);
+  const { backendUrl, token, currency } = useContext(ShopContext);
+  const [inemail, setInEmail] = useState({ email: '' });
 
+  useEffect(() => {
+    const fetchUserContextData = async () => {
+      if (!token) return;
+      
+      try {
+        const response = await axios.get(`${backendUrl}/api/user/user-profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.data.success) {
+          setInEmail(response.data.user);
+        } else {
+          console.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserContextData();
+  }, [token, backendUrl]);
 
   // Fetch all orders
   const fetchAllOrders = async () => {
+    setLoading(true);
     try {
-      if (!token) return;
-      const response = await axios.post(`${backendUrl}/api/order/list`, {}, { headers: { token } });
+      if (!token || !inemail.email) return;
+      
+      const response = await axios.post(
+        `${backendUrl}/api/order/industryOrders`,
+        { inemail: inemail.email }
+      );
+      
       if (response.data.success) {
+        console.log(response.data);
         setOrders(response.data.orders.reverse());
       } else {
         toast.error(response.data.message);
@@ -23,13 +53,20 @@ export default function IndustryUpdateStatus() {
     } catch (error) {
       console.error("Error fetching orders:", error);
       toast.error("Failed to fetch orders!");
+    } finally {
+      setLoading(false);
     }
   };
 
   // Update order status
   const handleStatusChange = async (event, orderId) => {
     try {
-      const response = await axios.post(`${backendUrl}/api/order/status`, { orderId, status: event.target.value }, { headers: { token } });
+      const response = await axios.post(
+        `${backendUrl}/api/order/status`, 
+        { orderId, status: event.target.value }, 
+        { headers: { token } }
+      );
+      
       if (response.data.success) {
         toast.success("Order status updated!");
         await fetchAllOrders();
@@ -43,8 +80,10 @@ export default function IndustryUpdateStatus() {
   };
 
   useEffect(() => {
-    fetchAllOrders();
-  }, [token]);
+    if (inemail.email) {
+      fetchAllOrders();
+    }
+  }, [token, backendUrl, inemail]);
 
   return (
     <div className="py-30 px-4 sm:px-10 lg:px-40 w-full justify-center">
@@ -53,7 +92,9 @@ export default function IndustryUpdateStatus() {
           Update Order Delivery Status
         </h1>
         
-        {orders.length === 0 ? (
+        {loading ? (
+          <p className="text-gray-700">Loading orders...</p>
+        ) : orders.length === 0 ? (
           <p className="text-gray-700">No orders available.</p>
         ) : (
           orders.map((order, index) => (

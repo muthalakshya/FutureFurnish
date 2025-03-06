@@ -69,6 +69,8 @@ const HomeownerRegistration = () => {
           zipCode: "",
           additionalDetails: "",
         });
+        navigate('/customer-dashboard')
+      window.location.reload();
       } else {
         toast.error(response.data.message);
       }
@@ -81,6 +83,7 @@ const HomeownerRegistration = () => {
   useEffect(()=>{
     if(token){
       navigate('/customer-dashboard')
+      // window.location.reload();
     }
   },[token])
 

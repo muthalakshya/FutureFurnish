@@ -63,7 +63,7 @@ const createProduct = async (req, res) => {
     // Create a new product with the updated data
     const product = new ProductUpload3dSchema(productData);
 
-    console.log("Product Data for Creation:", JSON.stringify(productData, null, 2));
+    // console.log("Product Data for Creation:", JSON.stringify(productData, null, 2));
 
     // Save product to database
     const savedProduct = await product.save();
@@ -227,7 +227,7 @@ const getProductById =  async (req, res) =>{
   try {
     const { email } = req.body;
     const product = await ProductUpload3dSchema.find({emailId:email});
-    console.log(product)
+    // console.log(product)
     
     if (!product) {
       return res.status(404).json({

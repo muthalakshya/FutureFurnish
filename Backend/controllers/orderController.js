@@ -16,6 +16,7 @@ const  razorpayInstance = new razorpay({
 const placeOrder  = async (req, res) => {
     try {
         const { userId, items, amount, address} = req.body;
+        // console.log(items)
 
         const orderData = {
             userId,
@@ -204,4 +205,89 @@ const updateStatus = async (req, res) => {
     }
 }
 
-export  {verifyRazorpay, verifyStripe,placeOrder, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders, updateStatus}
+// const industryOrders = async (req, res) => {
+//     try {
+//       const { inemail } = req.body;
+//       console.log("Looking for orders with industry email:", inemail);
+      
+//       // Find orders where any item has the matching industry email
+//       const orders = await orderModel.find({
+//         "items.industryEmail": inemail
+//       });
+      
+//       if (orders.length === 0) {
+//         return res.json({ 
+//           success: true, 
+//           orders: [],
+//           message: "No orders found for this industry email" 
+//         });
+//       }
+      
+//       // You can either return full orders
+//       res.json({
+//         success: true,
+//         orders: orders,
+//         count: orders.length
+//       });
+      
+//       // OR filter to only include matching items
+//       /*
+//       // Extract only the items that match the industry email
+//       const matchingItems = [];
+//       orders.forEach(order => {
+//         if (order.items && Array.isArray(order.items)) {
+//           const filteredItems = order.items.filter(item => 
+//             item.industryEmail === inemail
+//           );
+//           matchingItems.push(...filteredItems);
+//         }
+//       });
+      
+//       res.json({
+//         success: true,
+//         items: matchingItems,
+//         count: matchingItems.length
+//       });
+//       */
+      
+//     } catch (error) {
+//       console.log(error);
+//       res.status(500).json({ success: false, message: error.message });
+//     }
+//   };
+const industryOrders = async (req, res) => {
+    try {
+      const { inemail } = req.body;
+    //   console.log("Looking for orders with industry email:", inemail);
+      
+      // Find orders where any item has the matching industry email
+      const orders = await orderModel.find({
+        "items.industryEmail": inemail
+      });
+      
+      // Create a modified version of orders where each order only includes the matching items
+      const ordersWithFilteredItems = orders.map(order => {
+        // Create a copy of the order
+        const orderCopy = JSON.parse(JSON.stringify(order));
+        
+        // Filter items to only include those with matching industry email
+        orderCopy.items = orderCopy.items.filter(item => 
+          item.industryEmail === inemail
+        );
+        
+        return orderCopy;
+      });
+      
+      res.json({
+        success: true,
+        orders: ordersWithFilteredItems,
+        count: orders.length
+      });
+      
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };
+
+export  {verifyRazorpay, verifyStripe,placeOrder,industryOrders, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders, updateStatus}

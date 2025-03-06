@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 
 const Placeorders = () => {
   const [method, setMethod] = useState("cod");
-  const {navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products} = useContext(ShopContext)
+  const {navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, productData, setProductData} = useContext(ShopContext)
 
   const [formData, setFormData] = useState({
     firstName:'',
@@ -39,7 +39,7 @@ const Placeorders = () => {
       order_id: order.id,
       receipt: order.receipt,
       handler: async (response) => {
-        console.log(response)
+        // console.log(response)
         try {
           const {data}  = await axios.post(backendUrl+'/api/order/verifyRazorpay', response, {headers: {token}})
           if(data.success){
@@ -63,13 +63,14 @@ const Placeorders = () => {
 
       for(const items in cartItems) {
         for(const item in cartItems[items]){
-          // console.log(item)
+          // console.log(cartItems[items]['products']['industryEmail'],"item")
           if (cartItems[items][item] > 0 ) {
-            const itemInfo = structuredClone(products.find(product => product.id === items))
-            // console.log(itemInfo)
+            const itemInfo = structuredClone(productData.find(product => product.productId === items))
+            // console.log(itemInfo,"itingo")
               if(itemInfo) {
                 itemInfo.size = item
                 itemInfo.quantity = cartItems[items][item]
+                itemInfo.industryEmail = cartItems[items]['products']['industryEmail']
                 orderItems.push(itemInfo)
               }
           }
@@ -79,7 +80,8 @@ const Placeorders = () => {
       let orderData = {
         address : formData,
         items: orderItems,
-        amount: getCartAmount()+ delivery_fee
+        amount: getCartAmount()+ delivery_fee,
+        // industryEmail: industryEmail,
       }
 
       switch(method){

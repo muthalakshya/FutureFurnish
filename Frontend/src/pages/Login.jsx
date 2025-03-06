@@ -24,7 +24,8 @@ const Login = () => {
           localStorage.setItem('token',response.data.token)
           localStorage.setItem('userTypeData',response.data.userTypeData)
           setUserType(response.data.userTypeData)
-          // navigate(`/${localStorage.getItem("userTypeData")}-dashboard`)
+          navigate(`/${localStorage.getItem("userTypeData")}-dashboard`)
+          window.location.reload();
         }else{
           toast.error(response.data.message)
         }

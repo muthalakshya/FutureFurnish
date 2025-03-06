@@ -53,8 +53,8 @@ const filters = [
 export default function HomeDecor() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   // console.log(products[0]._id)
-  const { backendUrl, token, currency, setTotalOrders, setOrderTotalValues,userContextData } = useContext(ShopContext)
-  const [productData, setProductData] = useState([])
+  const { backendUrl, token, currency, setTotalOrders,productData, setProductData, setOrderTotalValues,userContextData } = useContext(ShopContext)
+  
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [email, setEmail] = useState('')
@@ -276,10 +276,10 @@ export default function HomeDecor() {
                 // console.log(img)
                 <ProductCards x3sides={img.sides} type={img.type} compareAtPrice={img.compareAtPrice} weight={img.weight} id={img.productId} imgProd={img.imageUrl} productId={img.productId} name={img.name} price={img.price} description={img.description} sizes={img.dimensions} />
               ))}
-              {products.map((img, index) => (
+              {/* {products.map((img, index) => (
                 // console.log(img.img_link)
                 <Cards index={img.id} imgProd={img.img_link} productId={img.id} name={img.title} price={img.price} description={img.description} sizes={img.sizes} />
-              ))}
+              ))} */}
             </div>
           </div>
         </section>

@@ -72,6 +72,29 @@ const Dashboard = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const {backendUrl,token,currency, totalOrders , setTotalOrders, orderTotalValues, setOrderTotalValues} = useContext(ShopContext)
   const  [orderData, setOrderData] = useState([])
+  const [inemail, setInEmail] = useState('')
+
+  useEffect(() => {
+    const fetchUserContextData = async () => {
+      if (!token) return;
+      
+      try {
+        const response = await axios.get(`${backendUrl}/api/user/user-profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.data.success) {
+          setInEmail(response.data.user);
+        } else {
+          console.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserContextData();
+  }, [token, backendUrl]);
 
   const handleTabChange = (_, newValue) => {
     setActiveTab(newValue);
@@ -85,7 +108,8 @@ const Dashboard = () => {
     try {
       if (!token) return;
   
-      const response = await axios.post(backendUrl + "/api/order/list", {}, { headers: { token } });
+      const response = await axios.post(`${backendUrl}/api/order/industryorders`,{inemail:inemail.email});
+      // const response = await axios.post(backendUrl + "/api/order/list", {}, { headers: { token } });
   
       if (response.data.success) {
         let allOrdersItem = [];
@@ -119,10 +143,10 @@ const Dashboard = () => {
     if (savedTotalOrders) setTotalOrders(Number(savedTotalOrders));
     if (savedTotalValue) setOrderTotalValues(Number(savedTotalValue));
   
-    loadOrderData();
-  }, [token]);
-
-  loadOrderData();
+    if (inemail && inemail.email) {  // Add this check to ensure email exists
+      loadOrderData();
+    }
+  }, [token, inemail]); // Add inemail as a dependency
 
   return (
     <div className="sm:px-24 px-6 space-y-8 py-28">

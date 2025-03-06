@@ -8,9 +8,9 @@ import ShowTableModel from "../conultant/ShowTableModel";
 
 const ProductCards = ({x3sides, imgProd, productId, name, description, price,sizes,type,compareAtPrice,weight}) => {
   const navigate = useNavigate();
-  console.log(type)
+  // console.log(type)
   // console.log(imgProd, productId, name, description, price,  sizes)
-  console.log(x3sides)
+  // console.log(x3sides)
   return (
     <div
       className="cursor-pointer bg-white rounded-lg shadow-lg overflow-hidden relative group"

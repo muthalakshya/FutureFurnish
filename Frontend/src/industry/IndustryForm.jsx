@@ -78,6 +78,8 @@ const IndustryForm = () => {
           others: "",
           message: "",
         });
+        navigate("/industry-dashboard")
+      window.location.reload();
       } else {
         toast.error(response.data.message);
       }
@@ -91,6 +93,7 @@ const IndustryForm = () => {
   useEffect(()=>{
     if(token){
       navigate("/industry-dashboard")
+      // window.location.reload();
     }
   },[token])
 

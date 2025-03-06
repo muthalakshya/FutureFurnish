@@ -106,6 +106,8 @@ const ConsultantRegistration = () => {
           introduction: "",
           resume: null,
         });
+        navigate("/consultant-dashboard");
+      window.location.reload();
       } else {
         toast.error(response.data.message);
       }
@@ -117,6 +119,7 @@ const ConsultantRegistration = () => {
   useEffect(()=>{
     if(token){
       navigate("/consultant-dashboard");
+      // window.location.reload();
     }
   },[token])
 

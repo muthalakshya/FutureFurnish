@@ -18,7 +18,7 @@ const ProfilePage = () => {
 
         if (response.data.success) {
           setUserData(response.data.user);
-          console.log(response.data.user);
+          // console.log(response.data.user);
         } else {
           console.error(response.data.message);
         }

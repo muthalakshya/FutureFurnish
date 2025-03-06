@@ -4,6 +4,7 @@ import Title from '../components/Title'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import ShowModel from './ShowModel'
+import ShowTableModel from './ShowTableModel'
 
 const ConsultantProduct = () => {
   const { backendUrl, token, currency, setTotalOrders, setOrderTotalValues,userContextData } = useContext(ShopContext)
@@ -30,8 +31,6 @@ const ConsultantProduct = () => {
       }
     };
 
-    // if (token) fetchUserData();
-  // }, [token,backendUrl]);
   fetchUserData()
 
   const loadProductData = async () => {
@@ -49,7 +48,7 @@ const ConsultantProduct = () => {
       if (response.data.success) {
         // Process the data correctly based on API response structure
         let allProducts = []
-        console.log(response.data)
+        console.log((response.data.data).length)
         
         response.data.data.forEach((prod) => {
           // If the product has individual items, flatten them into the list
@@ -129,7 +128,7 @@ const ConsultantProduct = () => {
   }, [email])
 
   return (
-    <div className='border-t pt-10 px-4 md:px-12 lg:px-24 mb-8'>
+    <div className='border-t pt-24 px-4 md:px-12 lg:px-24 mb-8'>
       <div className='text-2xl mb-6'>
         <Title text1={'ALL'} text2={'PRODUCTS'} />
       </div>
@@ -172,7 +171,11 @@ const ConsultantProduct = () => {
                   className='w-full h-full object-cover' 
                   onError={(e) => {e.target.src = 'https://miraaf.com/assets/images/no_order1.png'}}
                 />
-                  :<ShowModel d3sides={item.sides} />
+                  : item.type === "table" ? ( // ✅ Use `===` for strict comparison
+                  <ShowTableModel d3sides={item.sides} />
+                ) : (
+                  <ShowModel d3sides={item.sides} />
+                )
                 }
                 {/* <img 
                   src={item.imageUrl || (item.image && item.image[0]) || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=958&q=80'} 

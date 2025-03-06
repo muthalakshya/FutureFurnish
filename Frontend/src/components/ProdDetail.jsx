@@ -84,6 +84,7 @@ const ProdDetail = () => {
 
   useEffect(() => {
     fetchProductDetails();
+    console.log(product,"uj")
   }, [pd, token, backendUrl]);
 
   // Render loading state

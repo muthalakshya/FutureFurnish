@@ -11,7 +11,7 @@ const Navbar = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeButton, setActiveButton] = useState(""); 
-  const { toggleCart, getCartCount, token, setToken,setUserType } = useContext(ShopContext);
+  const { toggleCart, getCartCount, token, setToken,setUserType,setCartItems } = useContext(ShopContext);
   const navigate = useNavigate(); 
 
   const toggleMobileMenu = () => {
@@ -24,6 +24,8 @@ const Navbar = () => {
   };
 
   const logout = () => {
+    getCartCount(0)
+    setCartItems(0)
     localStorage.removeItem("token");
     localStorage.removeItem("predictionData");
     localStorage.removeItem("totalValue");

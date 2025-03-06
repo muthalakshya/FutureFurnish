@@ -125,7 +125,9 @@ const ProductUpload3dSch = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  industry:{type:String, required:true},
+  industryEmail:{type:String, required:true},
 });
 
 // Update the updatedAt field on save

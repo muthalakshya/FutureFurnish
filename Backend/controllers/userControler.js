@@ -147,4 +147,45 @@ const adminLogin = async (req, res) => {
 };
 
 
-export { loginUser, registerUser, adminLogin, userProfile };
+// Function to get users by userType
+const getUsersByType = async (req, res) => {
+  try {
+    const { userType } = req.body; // Get userType from URL params
+    
+    // Validate userType if needed
+    if (!["customer", "consultant", "industry"].includes(userType)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Invalid user type. Must be customer, consultant, or industry" 
+      });
+    }
+    
+    // Find users with the specified userType
+    const users = await userModel.find({ userType }).select("-password"); // Exclude password field
+    
+    // Check if users were found
+    if (users.length === 0) {
+      return res.status(404).json({ 
+        success: false, 
+        message: `No users found with type: ${userType}` 
+      });
+    }
+    
+    // Return the users
+    res.status(200).json({ 
+      success: true, 
+      count: users.length,
+      users 
+    });
+    
+  } catch (error) {
+    console.error("Get Users By Type Error:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Internal Server Error" 
+    });
+  }
+};
+
+// Export the new function along with existing ones
+export { loginUser, registerUser, adminLogin, userProfile, getUsersByType };

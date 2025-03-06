@@ -24,6 +24,7 @@ const IndustryOrders = () => {
             item["payment"] = order.payment;
             item["paymentMethod"] = order.paymentMethod;
             item["date"] = order.date;
+            console.log(item)
   
             totalValue += item.price * item.quantity;
   

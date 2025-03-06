@@ -4,6 +4,7 @@ import ShowModel from './ShowModel';
 import { ShopContext } from '../content/ShopContext';
 import Table3d from './Table3d';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const ProductSubmission = () => {
   // Product type selection state
@@ -16,10 +17,14 @@ const ProductSubmission = () => {
   const [base64Image, setBase64Image] = useState(null);
   const fileInputRef = useRef(null);
   const [images, setImages] = useState(null);
-  
+  const [allIndustryUsers, setAllIndustryUsers] = useState(null);
+  const [allIndustryEmail, setAllIndustryEmail] = useState(null);
+
   // Form data state
   const [productData, setProductData] = useState({
     title: '',
+    industry: "",
+    industryEmail: "",
     description: '',
     price: '0.00',
     compareAtPrice: '0.00',
@@ -286,6 +291,7 @@ const handleFinalSubmit = async () => {
         breadth: parseFloat(productData.breadth) || 0,
         length: parseFloat(productData.length) || 0
       },
+      industryEmail: allIndustryEmail.find(user => user.businessName === productData.industry)?.email || "Email Not found",
       // Only add imageUrl or sides if they exist
       ...(images ? { imageUrl: images } : {}),
       ...(sidesData ? { sides: sidesData } : {})
@@ -342,8 +348,12 @@ const handleFinalSubmit = async () => {
     setShowPreview(false);
     setShowTypeSelector(true);
     setProductType('');
+    setAllIndustryEmail(null)
+    setAllIndustryUsers(null)
     setProductData({
       title: '',
+      industry: "",
+      industryEmail:"",
       description: '',
       price: '0.00',
       compareAtPrice: '0.00',
@@ -418,6 +428,24 @@ const handleFinalSubmit = async () => {
       </div>
     </div>
   );
+
+  const allIndustry = async ()=>{
+    const response = await axios.post(backendUrl+"/api/user/get-user",{userType:"industry"})
+    console.log(response.data.users)
+    const industry = response.data.users.map((user)=>{
+      return user.businessName
+    })
+    const industryemail = response.data.users.map((user)=>{
+      return user.email
+    })
+    setAllIndustryUsers(industry)
+    setAllIndustryEmail(response.data.users)
+    console.log(industry)
+  }
+
+  useEffect(()=>{
+    allIndustry()
+  },[])
   
   // Product preview component
   const ProductPreview = () => (
@@ -793,8 +821,119 @@ const handleFinalSubmit = async () => {
               
             </div>
 
+            {/* <div className="bg-white rounded shadow p-4 mb-4">
+              <h3 className="font-medium mb-2">Pricing</h3>
+              <div className="flex mb-4">
+                <div className="w-1/2 pr-2">
+                  <label className="block text-sm mb-1">
+                    Price <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-2 top-2 text-gray-500">
+                      ₹
+                    </span>
+                    <input
+                      type="text"
+                      name="price"
+                      className="w-full border rounded p-2 pl-6"
+                      value={productData.price}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="w-1/2 pl-2">
+                  <label className="block text-sm mb-1">Compare-at price</label>
+                  <div className="relative">
+                    <span className="absolute left-2 top-2 text-gray-500">
+                      ₹
+                    </span>
+                    <input
+                      type="text"
+                      name="compareAtPrice"
+                      className="w-full border rounded p-2 pl-6"
+                      value={productData.compareAtPrice}
+                      onChange={handleInputChange}
+                    />
+                    <span className="absolute right-2 top-2 text-gray-400 text-sm">
+                      ⓘ
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="chargeTax"
+                    checked={productData.chargeTax}
+                    onChange={handleInputChange}
+                    className="mr-2"
+                  />
+                  <span className="text-sm">Charge tax on this product</span>
+                </label>
+              </div>
+              <div className="flex">
+                <div className="w-1/3 pr-2">
+                  <label className="block text-sm mb-1">Cost per item</label>
+                  <div className="relative">
+                    <span className="absolute left-2 top-2 text-gray-500">
+                      ₹
+                    </span>
+                    <input
+                      type="text"
+                      name="costPerItem"
+                      className="w-full border rounded p-2 pl-6"
+                      value={productData.costPerItem}
+                      onChange={handleInputChange}
+                    />
+                    <span className="absolute right-2 top-2 text-gray-400 text-sm">
+                      ⓘ
+                    </span>
+                  </div>
+                </div>
+                <div className="w-1/3 px-2">
+                  <label className="block text-sm mb-1">Profit</label>
+                  <input
+                    type="text"
+                    className="w-full border rounded p-2"
+                    value={productData.profit}
+                    readOnly
+                  />
+                </div>
+                <div className="w-1/3 pl-2">
+                  <label className="block text-sm mb-1">Margin</label>
+                  <input
+                    type="text"
+                    className="w-full border rounded p-2"
+                    value={productData.margin}
+                    readOnly
+                  />
+                </div>
+              </div>
+            </div> */}
+
             <div className="bg-white rounded shadow p-4 mb-4">
               <h3 className="font-medium mb-2">Pricing</h3>
+              <div className="mb-4">
+                <label className="block text-sm mb-1">
+                  Industry <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="industry"
+                  className="w-full border rounded p-2"
+                  value={productData.industry}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select an industry</option>
+                  {allIndustryUsers?.map((industry) => (
+                    <option  value={industry}>
+                      {industry}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="flex mb-4">
                 <div className="w-1/2 pr-2">
                   <label className="block text-sm mb-1">

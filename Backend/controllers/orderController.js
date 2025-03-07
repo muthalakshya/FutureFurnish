@@ -5,7 +5,7 @@ import razorpay  from 'razorpay';
 
 
 const currency = 'inr'
-const deliveryCharges = 40
+const deliveryCharges = 50
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const  razorpayInstance = new razorpay({

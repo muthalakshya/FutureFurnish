@@ -28,7 +28,7 @@ const Orders = () => {
         let allOrdersItem = [];
         response.data.orders.map((order, index) => {
           // console.log(index,order)
-          if (index < 5) {
+          if (index >0) {
             order.items.map((item) => {
               item["status"] = order.status;
               item["payment"] = order.payment;
